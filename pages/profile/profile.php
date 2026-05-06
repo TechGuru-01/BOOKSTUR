@@ -16,8 +16,7 @@ if ($is_admin) {
     $msg_text = "";
 
     
-    $users_list_query = "SELECT * FROM users ORDER BY created_at DESC";
-    $users_result = mysqli_query($conn, $users_list_query);
+   
 
     if (isset($_GET['id'])) {
         $id = $_GET['id'];

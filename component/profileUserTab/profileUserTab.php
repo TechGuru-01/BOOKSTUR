@@ -1,4 +1,8 @@
-<?php $users_query = $conn->query("SELECT * FROM users WHERE course != 'Admin' ORDER BY full_name ASC");?>
+<?php 
+$users_list_query = "SELECT * FROM users ORDER BY created_at DESC";
+$users_result = mysqli_query($conn, $users_list_query);
+$users_query = $conn->query("SELECT * FROM users WHERE course != 'Admin' ORDER BY full_name ASC");
+?>
     
 <?php include "../../component/profileStatCard/profileStatCard.php"?>
 
