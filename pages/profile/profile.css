@@ -1,0 +1,362 @@
+:root {
+    --primary-red: #dc1717;
+    --gold: #ffc107;
+    --white: #ffffff;
+    --light-bg: #f8f9fa;
+    --dark-text: #2c3e50;
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+* {
+    box-sizing: border-box; /* Ensures padding doesn't break layout width */
+}
+
+body {
+    background-color: var(--light-bg);
+    margin: 0; padding: 0;
+    color: var(--dark-text);
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden; /* Prevent horizontal scroll on the whole page */
+    width: 100%;
+}
+
+.account-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-top: 80px;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.account-main {
+    max-width: 1300px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 20px;
+}
+
+
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 40px;
+    margin-top: 40px; 
+    position: relative;
+    z-index: 200;
+}
+
+
+
+
+
+/* Content Area */
+.tab-content-wrapper {
+    min-width: 0; /* Prevent grid blowout */
+}
+
+.content-card {
+    background: white;
+    padding: 40px;
+    border-radius: 35px;
+    box-shadow: 0 15px 45px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+
+.content-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 6px;
+    background: linear-gradient(to right, var(--gold), var(--primary-red));
+}
+
+
+
+
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Info Form */
+.info-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-group label {
+    font-weight: 800;
+    font-size: 0.8rem;
+    color: #999;
+    text-transform: uppercase;
+}
+
+.form-group input {
+    padding: 16px 22px;
+    border: 2px solid #f0f0f0;
+    border-radius: 15px;
+    font-family: inherit;
+    font-weight: 700;
+    background: #fafafa;
+    color: #333;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 18px;
+    background: #e8f5e9;
+    color: #2e7d32;
+    border-radius: 100px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 1px solid rgba(46, 125, 50, 0.1);
+}
+
+.btn-save {
+    grid-column: span 1;
+    margin-top: 20px;
+    padding: 18px;
+    background: linear-gradient(to right, var(--primary-red), #8b0000);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(220, 23, 23, 0.3);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px;
+    color: #ccc;
+}
+
+.empty-state span { font-size: 80px; margin-bottom: 20px; }
+
+.btn-shop {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 15px 40px;
+    background: var(--gold);
+    color: #333;
+    text-decoration: none;
+    font-weight: 800;
+    border-radius: 12px;
+}
+
+/* Admin Specific Styles */
+
+
+
+
+/* Responsive Design Overhaul */
+@media (max-width: 1000px) {
+    .account-wrapper {
+        padding-top: 60px;
+    }
+
+    .account-main {
+        padding: 15px;
+    }
+
+    .profile-header {
+        height: auto;
+        min-height: auto;
+        flex-direction: column;
+        padding: 50px 20px;
+        text-align: center;
+        border-radius: 20px;
+        gap: 20px;
+        width: 100%; /* Force width limit */
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .profile-main-info {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .avatar-container {
+        width: 110px;
+        height: 110px;
+        margin: 0 auto;
+    }
+
+    .user-titles h1 {
+        font-size: 1.8rem;
+    }
+
+    .dashboard-grid {
+        display: flex; /* Switched to flex for strict stacking order */
+        flex-direction: column;
+        margin-top: 25px;
+        gap: 25px; /* Clear gap between sidebar and content */
+    }
+
+    .dashboard-sidebar {
+        width: 100%;
+        gap: 20px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .identity-pill {
+        margin-top: 0 !important; /* Force reset negative margins on mobile */
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .nav-pill-box {
+        max-width: 100%;
+        min-height: 300px; /* Forced length to prevent overlap */
+        padding: 25px 20px; /* More breathing room */
+        border-radius: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    .vertical-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 15px; /* Spread buttons out more */
+    }
+
+    .nav-btn {
+        padding: 14px 20px;
+        font-size: 0.9rem;
+        justify-content: flex-start;
+        border-radius: 18px;
+        background: #fdfdfd;
+        border: 1px solid #f0f0f0;
+    }
+
+    .nav-btn.active {
+        background: #fff5f5;
+        border-color: rgba(220, 23, 23, 0.1);
+    }
+
+    .nav-btn.logout {
+        margin-top: 10px;
+        background: #fff5f5;
+    }
+
+    /* Content Area & Sections */
+    .tab-content-wrapper {
+        width: 100%;
+        position: relative;
+    }
+
+    .content-card {
+        padding: 25px 20px;
+        border-radius: 25px;
+        width: 100%;
+    }
+
+    .card-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .info-form {
+        grid-template-columns: 1fr !important; /* Force single column for all forms */
+        gap: 20px;
+    }
+
+    /* Admin Table Mobile Optimization */
+    .table-responsive {
+        margin: 10px -10px;
+        padding: 0 10px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .admin-table {
+        min-width: 700px; /* Ensure table doesn't squish too much */
+    }
+
+    .admin-table th, .admin-table td {
+        padding: 12px 10px;
+        font-size: 0.85rem;
+    }
+
+    /* Transactions Empty State Refinement */
+    .empty-state {
+        padding: 60px 20px; /* More vertical space on mobile */
+        text-align: center;
+    }
+
+    .empty-state span {
+        font-size: 50px; /* Scaled down for mobile */
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    .empty-state p {
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+    }
+
+    .btn-shop {
+        width: 100%; /* Full width button on mobile */
+        max-width: 250px;
+        padding: 15px;
+    }
+
+    /* Settings Form Refinement */
+    .form-group label {
+        font-size: 0.75rem; /* Tighter labels for mobile */
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
+
+    .form-group input {
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+
+    .btn-save {
+        width: 100%;
+        padding: 15px;
+        font-size: 1rem;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-header {
+        padding: 40px 15px;
+    }
+    
+    .user-titles h1 {
+        font-size: 1.5rem;
+    }
+
+    .nav-btn {
+        padding: 12px 15px;
+    }
+
+    .card-header h2 {
+        font-size: 1.3rem;
+    }
+}
+/* Logout Modal Styles */
+

@@ -1,0 +1,121 @@
+.filter-wrapper {
+  width: 100%;
+  background: transparent; /* No more harsh black */
+  padding: 0;
+  margin-top: -30px; 
+  position: relative;
+  z-index: 20;
+  /* Softly blurs the image in the corners for a premium feel */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.filter-container {
+  width: 100%;
+  padding: 25px 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  background: linear-gradient(to bottom, var(--gold), #ffb300);
+  border-radius: 60px 60px 0 0;
+  box-sizing: border-box;
+  
+  /* Soft, diffused shadow that blends with the photo */
+  box-shadow: 
+    0 -15px 35px rgba(0,0,0,0.3),
+    0 10px 30px rgba(0,0,0,0.1);
+  border-top: 1px solid rgba(255,255,255,0.3);
+}
+
+.category-btn {
+  flex: 1;
+  max-width: 170px;
+  height: 65px; /* Taller than the bar for "Pop" effect */
+  background: var(--white);
+  border: 2px solid #dc1717;
+  color: #dc1717;
+  cursor: pointer;
+  border-radius: 18px;
+  font-weight: 900;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-decoration: none;
+  
+  /* Floating "Over-the-Edge" Effect */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  margin: -10px 0; /* Pulls the button over the top/bottom edges */
+}
+
+.category-btn .material-icons-outlined,
+.category-btn .material-symbols-outlined {
+  font-size: 26px;
+  color: #dc1717;
+}
+
+.category-btn:hover {
+  background: #dc1717;
+  color: var(--white);
+  transform: translateY(-8px) scale(1.05); /* Aggressive hover lift */
+  box-shadow: 0 15px 30px rgba(220, 23, 23, 0.4);
+}
+
+.category-btn:hover .material-icons-outlined,
+.category-btn:hover .material-symbols-outlined {
+  color: var(--white);
+  transform: rotate(-10deg);
+}
+
+.category-btn.active {
+  background: #dc1717;
+  color: var(--white);
+  border-color: #dc1717;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(220, 23, 23, 0.3);
+}
+
+/* Mobile Responsive Refinement */
+@media (max-width: 900px) {
+  .filter-container {
+    margin-top: -30px;
+    border-radius: 40px 40px 0 0;
+    padding: 20px 15px;
+    gap: 12px;
+    flex-wrap: wrap; /* Allow buttons to wrap into a grid */
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .category-btn {
+    flex: 0 0 calc(50% - 12px); /* 2 items per row */
+    height: 55px;
+    max-width: none;
+    font-size: 0.75rem;
+    gap: 8px;
+    margin: 0; /* Remove negative margins on mobile to avoid clipping */
+  }
+
+  .category-btn .material-icons-outlined,
+  .category-btn .material-symbols-outlined {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .filter-container {
+    padding: 15px 10px;
+    gap: 8px;
+  }
+  
+  .category-btn {
+    flex: 0 0 calc(50% - 8px);
+    height: 50px;
+    padding: 8px;
+  }
+}

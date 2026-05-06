@@ -1,0 +1,109 @@
+.dashboard-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.identity-pill {
+    background: white;
+    padding: 15px 30px;
+    border-radius: 100px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-left: 6px solid var(--gold);
+    width: 100%;
+    max-width: fit-content;
+}
+
+.pill-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 900;
+    font-size: 1rem;
+    color: var(--primary-red);
+    letter-spacing: 2px;
+}
+
+.nav-pill-box {
+    background: white;
+    padding: 30px 15px;
+    border-radius: 25px;
+    width: 100%;
+    max-width: 280px;
+    min-height: 280px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.vertical-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: static;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    padding: 8px 18px;
+    background: transparent;
+    border: 1px solid transparent;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: #555;
+    border-radius: 100px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.nav-btn:hover {
+    background: #fdf2f2;
+    color: var(--primary-red);
+    transform: translateX(5px);
+}
+
+.nav-btn[onclick*="profile"]:hover .material-icons-outlined {
+    color: #3498db;
+}
+
+.nav-btn[onclick*="users"]:hover .material-icons-outlined {
+    color: #f1c40f;
+}
+
+.nav-btn[onclick*="transactions"]:hover .material-icons-outlined {
+    color: #2ecc71;
+}
+
+.nav-btn[onclick*="settings"]:hover .material-icons-outlined {
+    color: #9b59b6;
+}
+
+.nav-btn.logout:hover .material-icons-outlined {
+    color: #e74c3c;
+}
+
+.nav-btn.active {
+    background: white;
+    color: var(--primary-red);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-left: 6px solid var(--gold);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.nav-btn.active .material-icons-outlined {
+    color: var(--primary-red);
+}
+
+.nav-btn.logout {
+    margin-top: 10px;
+    color: #e53935;
+}
