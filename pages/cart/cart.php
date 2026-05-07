@@ -9,11 +9,11 @@ require_once '../../include/auth_checker.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart | SSCR-C Bookstore</title>
 
-    <!-- Shared styles (your existing stack) -->
+    <!-- Shared styles (existing stack) -->
     <link rel="stylesheet" href="../../component/navbar/navbar.css">
     <link rel="stylesheet" href="../../component/searchbar/searchbar.css">
     <link rel="stylesheet" href="../../component/adminUtils/adminUtils.css">
-    <link rel="stylesheet" href="../../component/addToBooksModal/addToBooksModal.css">
+    <link rel="stylesheet" href="../../component/addItems/addItems.css">
     <link rel="stylesheet" href="../../component/footer/footer.css">
     <link rel="stylesheet" href="../../style.css">
 
@@ -30,7 +30,7 @@ require_once '../../include/auth_checker.php';
     <?php include '../../component/navbar/navbar.php'; ?>
 
     <!-- ═══════════ PAGE HEADER ═══════════ -->
-    <header class="page-header cart-page-header">
+    <header class="cart-page-header">
         <div class="text-container">
             <h1>Shopping Cart</h1>
             <p>Review your items before checkout</p>
@@ -57,11 +57,11 @@ require_once '../../include/auth_checker.php';
                     </button>
                 </div>
 
-                <!-- Items injected by cart.js -->
+                <!-- Items injected by Cart.js -->
                 <div id="cartItemsList"></div>
 
                 <!-- Empty state -->
-                <div class="empty-cart" id="emptyCart">
+                <div class="empty-cart hidden" id="emptyCart">
                     <div class="empty-cart-icon">
                         <span class="material-icons-outlined">shopping_cart</span>
                     </div>
@@ -108,14 +108,16 @@ require_once '../../include/auth_checker.php';
 
                 <div class="summary-row">
                     <span class="summary-label">Subtotal (<span id="summaryItemCount">0</span> items)</span>
-                    <span class="summary-value" id="summarySubtotal">₱0.00</span>
+                    <span class="summary-value" id="summarySubtotal">&#8369;0.00</span>
                 </div>
+
                 <div class="summary-row" id="discountRow" style="display:none;">
                     <span class="summary-label summary-label-green">
                         Discount <span class="discount-badge" id="discountBadge"></span>
                     </span>
-                    <span class="summary-value summary-value-green" id="discountValue">−₱0.00</span>
+                    <span class="summary-value summary-value-green" id="discountValue">&#8722;&#8369;0.00</span>
                 </div>
+
                 <div class="summary-row">
                     <span class="summary-label">Pickup</span>
                     <span class="summary-value summary-value-green">FREE</span>
@@ -123,7 +125,7 @@ require_once '../../include/auth_checker.php';
 
                 <div class="summary-total-row">
                     <span class="summary-total-label">Total</span>
-                    <span class="summary-total-value" id="summaryTotal">₱0.00</span>
+                    <span class="summary-total-value" id="summaryTotal">&#8369;0.00</span>
                 </div>
 
                 <!-- Payment method -->
@@ -171,7 +173,7 @@ require_once '../../include/auth_checker.php';
                 <div class="trust-list">
                     <div class="trust-item">
                         <span class="material-icons-outlined trust-icon trust-icon-green">verified</span>
-                        Official SSCR Bookstore — authentic items only
+                        Official SSCR Bookstore &mdash; authentic items only
                     </div>
                     <div class="trust-item">
                         <span class="material-icons-outlined trust-icon trust-icon-blue">local_shipping</span>
@@ -193,7 +195,7 @@ require_once '../../include/auth_checker.php';
         <span id="toastMsg">Done!</span>
     </div>
 
-    <!-- ═══════════ PAYMENT PROCESSING OVERLAY ═══════════ -->
+    <!-- ═══════════ PAYMENT PROCESSING OVERLAY — CENTERED ═══════════ -->
     <div id="paymentOverlay" class="payment-overlay hidden">
         <div class="payment-sheet">
             <div class="payment-spinner-wrap" id="paymentSpinnerWrap">
@@ -201,6 +203,7 @@ require_once '../../include/auth_checker.php';
             </div>
             <h2 class="payment-title" id="paymentTitle">Processing Payment</h2>
             <p class="payment-sub" id="paymentSub">Please wait, do not close this window...</p>
+
             <div class="payment-steps">
                 <div class="payment-step" id="pstep1">
                     <div class="payment-step-dot" id="pstep1dot">1</div>
@@ -218,16 +221,17 @@ require_once '../../include/auth_checker.php';
                     <span class="material-icons-outlined payment-step-icon">storefront</span>
                 </div>
             </div>
+
             <div class="payment-amount-chip">
                 <span class="material-icons-outlined">payments</span>
                 <span id="paymentChipMethod">GCash</span>
                 <span class="chip-divider"></span>
-                <strong id="paymentChipTotal">₱0.00</strong>
+                <strong id="paymentChipTotal">&#8369;0.00</strong>
             </div>
         </div>
     </div>
 
-    <!-- ═══════════ ORDER CONFIRMATION OVERLAY ═══════════ -->
+    <!-- ═══════════ ORDER CONFIRMATION OVERLAY — CENTERED ═══════════ -->
     <div id="orderOverlay" class="order-overlay hidden">
         <div class="order-sheet">
 
@@ -238,7 +242,7 @@ require_once '../../include/auth_checker.php';
                     </div>
                 </div>
                 <h2 class="order-success-title">Order Placed!</h2>
-                <p class="order-success-sub">We've received your order. Please proceed to pickup.</p>
+                <p class="order-success-sub">We&rsquo;ve received your order. Please proceed to pickup.</p>
                 <div class="order-id-chip" id="confirmOrderId">#SSCR-0000</div>
             </div>
 
@@ -246,7 +250,10 @@ require_once '../../include/auth_checker.php';
                 <span class="material-icons-outlined pickup-banner-icon">storefront</span>
                 <div>
                     <div class="pickup-banner-title">Pickup Only</div>
-                    <div class="pickup-banner-sub">Delivery is not available at the moment. Claim your order at the SSCR Bookstore window during school hours.</div>
+                    <div class="pickup-banner-sub">
+                        Delivery is not available at the moment. Claim your order at the SSCR Bookstore
+                        window during school hours.
+                    </div>
                 </div>
             </div>
 
@@ -257,7 +264,7 @@ require_once '../../include/auth_checker.php';
                     </div>
                     <div class="tracker-info">
                         <div class="tracker-label">Order Placed</div>
-                        <div class="tracker-time" id="trackerTime">—</div>
+                        <div class="tracker-time" id="trackerTime">&mdash;</div>
                     </div>
                 </div>
                 <div class="tracker-line"></div>
@@ -277,7 +284,7 @@ require_once '../../include/auth_checker.php';
                     </div>
                     <div class="tracker-info">
                         <div class="tracker-label">Ready for Pickup</div>
-                        <div class="tracker-time">You'll be notified when ready</div>
+                        <div class="tracker-time">You&rsquo;ll be notified when ready</div>
                     </div>
                 </div>
                 <div class="tracker-line"></div>
@@ -298,11 +305,11 @@ require_once '../../include/auth_checker.php';
                 <div class="confirm-summary-divider"></div>
                 <div class="confirm-row">
                     <span>Payment Method</span>
-                    <span class="confirm-val" id="confirmPayment">—</span>
+                    <span class="confirm-val" id="confirmPayment">&mdash;</span>
                 </div>
                 <div class="confirm-row">
                     <span>Total Paid</span>
-                    <span class="confirm-val confirm-total" id="confirmTotal">₱0.00</span>
+                    <span class="confirm-val confirm-total" id="confirmTotal">&#8369;0.00</span>
                 </div>
             </div>
 
@@ -320,12 +327,16 @@ require_once '../../include/auth_checker.php';
         </div>
     </div>
 
-    <!-- ═══════════ ADMIN UTILS + ALL MODALS ═══════════ -->
+    <!-- ═══════════ ADMIN UTILS + ADD ITEM MODALS ═══════════ -->
     <?php include '../../component/adminUtils/adminUtils.php'; ?>
+    <?php include '../../component/addItems/addItems.php'; ?>
+
     <!-- ═══════════ FOOTER ═══════════ -->
     <?php include '../../component/footer/footer.php'; ?>
+
     <!-- ═══════════ SCRIPTS ═══════════ -->
     <script src="../../icons/sweetalert2.all.min.js"></script>
+    <script src="../../component/addItems/addItems.js"></script>
     <script src="../../component/adminUtils/adminUtils.js"></script>
     <script src="../../component/navbar/nav.js"></script>
     <script src="../../component/searchbar/searchbar.js"></script>

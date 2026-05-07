@@ -1,11 +1,9 @@
-/* 1. Overlay & Backdrop Blur */
 .atc-modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(8px);
     display: none;
-    /* Controlled by .is-active */
     align-items: center;
     justify-content: center;
     z-index: 9999 !important;
@@ -17,7 +15,6 @@
     display: flex;
 }
 
-/* 2. Modern Modal Box */
 .atc-modal-box {
     background: #ffffff;
     width: 95vw;
@@ -43,7 +40,6 @@
     }
 }
 
-/* 3. Layout Grid (2 Columns) */
 .atc-form-body {
     display: grid;
     grid-template-columns: 300px 1fr;
@@ -247,7 +243,127 @@
     height: 35px;
     border-radius: 4px;
 }
+/* Layout for the Selection Area */
+.selection-container {
+    margin-top: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
 
+/* Container label */
+.section-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+/* Grid layout for 4 columns */
+.size-tiles-group {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.size-tile {
+    cursor: pointer;
+}
+
+/* Tago ang bilog ng radio */
+.size-tile input[type="radio"] {
+    display: none;
+}
+
+/* Default State ng Tile (Puti/Gray border) */
+.size-tile .tile-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+    border: 2px solid #eee;
+    /* Light gray border para malinis */
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #fff;
+    color: #555;
+}
+
+/* Hover State - Red Outline */
+.size-tile:hover .tile-label {
+    border-color: #dc1717;
+    color: #dc1717;
+    background-color: #fff5f5;
+    /* Light red tint on hover */
+}
+
+/* SELECTED STATE - Red Gradient (SSCR Theme) */
+.size-tile input:checked+.tile-label {
+    /* Mula Dark Red hanggang Vibrant Red */
+    background: linear-gradient(135deg, #8B0000 0%, #dc1717 100%);
+    color: #fff;
+    border-color: #8B0000;
+    transform: translateY(-3px);
+    /* Mas mataas na angat para sa active */
+    box-shadow: 0 6px 12px rgba(220, 23, 23, 0.3);
+    /* Reddish shadow */
+}
+
+/* Quantity Row */
+.qty-selection-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.qty-small {
+    width: 85px !important;
+    height: 40px;
+    text-align: center;
+    padding: 5px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.qty-small:focus {
+    border-color: #dc1717;
+    outline: none;
+}
+
+/* Save Button Color Update */
+
+.stock-display {
+    display: block;
+    font-size: 14px;
+    font-weight: normal;
+    margin-top: 2px;
+    opacity: 0.7;
+}
+
+/* Style para sa mga tiles na wala nang stock */
+.disabled-tile {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background-color: #f0f0f0;
+}
+
+.disabled-tile .tile-label {
+    color: #999;
+}
+/* Mobile Responsive */
+@media (max-width: 480px) {
+    .size-tiles-group {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
 /* Responsive */
 @media (max-width: 768px) {
     .atc-form-body {

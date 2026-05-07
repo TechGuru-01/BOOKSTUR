@@ -66,7 +66,6 @@ if (!$result) {
                             echo "Stock: " . ($row['stock_quantity'] ?? 0);
                         } else {
                             $total = ($row['stock_xs'] ?? 0) + 
-                                     ($row['stock_quantity'] ?? 0) + 
                                      ($row['stock_m'] ?? 0) + 
                                      ($row['stock_l'] ?? 0) + 
                                      ($row['stock_xl'] ?? 0) + 
@@ -85,8 +84,8 @@ if (!$result) {
                             Edit Product
                         </button>
                     <?php else: ?>
-                        <button class="add-btn btn-cart" onclick="addToCart(<?php echo $row['product_id']; ?>)">
-                            <span class="material-icons-outlined">shopping_cart</span>
+                      <button type="button" class="add-btn btn-cart" 
+                            onclick='openCartModal(<?php echo htmlspecialchars(json_encode($productData), ENT_QUOTES, "UTF-8"); ?>)'>
                             Add to Cart
                         </button>
                     <?php endif; ?>

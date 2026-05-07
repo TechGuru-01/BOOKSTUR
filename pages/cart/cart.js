@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════
-   cart.js  — BOOKSTUR Shopping Cart
+   Cart.js  — BOOKSTUR Shopping Cart
    Works with localStorage so addToCart() called
    on any product page (library, uniform, apparel,
    other) persists items here.
@@ -56,19 +56,20 @@ function addToCart(productId, productName, price, imagePath) {
       showConfirmButton: false,
       timer: 1400,
       timerProgressBar: true,
+      customClass: { container: "high-z-index" },
     });
   } else {
     alert((productName || "Item") + " added to cart.");
   }
 
-  updateNavCartCount(); // keep nav badge in sync if present
+  updateNavCartCount();
 }
 
 /* ── Update cart count in the nav link ── */
 function updateNavCartCount() {
   const cart = getCart();
   const total = cart.reduce((s, i) => s + i.qty, 0);
-  /* Your navbar renders: Cart (0) — try to keep it live */
+  /* Targets any element with class cart-nav-count */
   document.querySelectorAll(".cart-nav-count").forEach((el) => {
     el.textContent = total;
   });
@@ -113,15 +114,15 @@ function renderCart() {
             </div>
             <div class="cart-item-info">
                 <div class="cart-item-name">${escHtml(item.name)}</div>
-                <div class="cart-item-price">₱${item.price.toFixed(2)}</div>
+                <div class="cart-item-price">&#8369;${item.price.toFixed(2)}</div>
             </div>
             <div class="qty-control">
-                <button class="qty-btn" onclick="changeQty(this, -1)">−</button>
+                <button class="qty-btn" onclick="changeQty(this, -1)" aria-label="Decrease quantity">&#8722;</button>
                 <span class="qty-value">${item.qty}</span>
-                <button class="qty-btn" onclick="changeQty(this, 1)">+</button>
+                <button class="qty-btn" onclick="changeQty(this, 1)" aria-label="Increase quantity">&#43;</button>
             </div>
             <div class="cart-item-subtotal">${formatPHP(item.price * item.qty)}</div>
-            <button class="cart-remove-btn" onclick="removeItem(this)" title="Remove item">
+            <button class="cart-remove-btn" onclick="removeItem(this)" title="Remove item" aria-label="Remove ${escHtml(item.name)}">
                 <span class="material-icons-outlined">close</span>
             </button>
         `;
@@ -132,7 +133,7 @@ function renderCart() {
   recalculate();
 }
 
-/* ── Escape HTML ── */
+/* ── Escape HTML to prevent XSS ── */
 function escHtml(str) {
   return String(str)
     .replace(/&/g, "&amp;")
@@ -141,10 +142,10 @@ function escHtml(str) {
     .replace(/"/g, "&quot;");
 }
 
-/* ── Format currency ── */
+/* ── Format currency (Philippine Peso) ── */
 function formatPHP(amount) {
   return (
-    "₱" +
+    "&#8369;" +
     amount.toLocaleString("en-PH", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -173,26 +174,35 @@ function recalculate() {
     const price = parseFloat(item.dataset.price);
     const qty = parseInt(item.querySelector(".qty-value").textContent);
     const sub = price * qty;
-    item.querySelector(".cart-item-subtotal").textContent = formatPHP(sub);
+    const subEl = item.querySelector(".cart-item-subtotal");
+    if (subEl) subEl.innerHTML = formatPHP(sub);
     subtotal += sub;
   });
 
   const discount = promoDiscount > 0 ? Math.round(subtotal * promoDiscount) : 0;
   const total = subtotal - discount;
 
-  document.getElementById("summaryItemCount").textContent = items.length;
-  document.getElementById("itemCountBadge").textContent = items.length;
-  document.getElementById("summarySubtotal").textContent = formatPHP(subtotal);
-  document.getElementById("summaryTotal").textContent = formatPHP(total);
-
+  const summaryItemCount = document.getElementById("summaryItemCount");
+  const itemCountBadge = document.getElementById("itemCountBadge");
+  const summarySubtotal = document.getElementById("summarySubtotal");
+  const summaryTotal = document.getElementById("summaryTotal");
   const discRow = document.getElementById("discountRow");
-  if (discount > 0) {
-    discRow.style.display = "flex";
-    document.getElementById("discountValue").textContent =
-      "−" + formatPHP(discount);
-    document.getElementById("discountBadge").textContent = promoCode;
-  } else {
-    discRow.style.display = "none";
+
+  if (summaryItemCount) summaryItemCount.textContent = items.length;
+  if (itemCountBadge) itemCountBadge.textContent = items.length;
+  if (summarySubtotal) summarySubtotal.innerHTML = formatPHP(subtotal);
+  if (summaryTotal) summaryTotal.innerHTML = formatPHP(total);
+
+  if (discRow) {
+    if (discount > 0) {
+      discRow.style.display = "flex";
+      const discVal = document.getElementById("discountValue");
+      const discBadge = document.getElementById("discountBadge");
+      if (discVal) discVal.innerHTML = "&#8722;" + formatPHP(discount);
+      if (discBadge) discBadge.textContent = promoCode;
+    } else {
+      discRow.style.display = "none";
+    }
   }
 
   if (items.length === 0) {
@@ -203,7 +213,7 @@ function recalculate() {
     if (checkBtn) checkBtn.disabled = false;
   }
 
-  persistQtyChanges(); // keep localStorage in sync with qty edits
+  persistQtyChanges();
 }
 
 /* ── Persist qty changes back to localStorage ── */
@@ -230,45 +240,79 @@ function changeQty(btn, delta) {
   recalculate();
 }
 
-/* ── Remove item ── */
+/* ── Remove item with animation ── */
 function removeItem(btn) {
   const itemEl = btn.closest(".cart-item");
   const id = itemEl.dataset.id;
-  const name = itemEl.querySelector(".cart-item-name").textContent;
+  const nameEl = itemEl.querySelector(".cart-item-name");
+  const name = nameEl ? nameEl.textContent : "Item";
 
-  itemEl.style.transition = "opacity 0.25s, transform 0.25s";
+  itemEl.style.transition =
+    "opacity 0.25s ease, transform 0.25s ease, max-height 0.3s ease";
   itemEl.style.opacity = "0";
   itemEl.style.transform = "translateX(20px)";
+  itemEl.style.overflow = "hidden";
+
+  setTimeout(() => {
+    itemEl.style.maxHeight = "0";
+    itemEl.style.padding = "0";
+    itemEl.style.margin = "0";
+    itemEl.style.border = "0";
+  }, 200);
 
   setTimeout(() => {
     itemEl.remove();
-
-    /* Remove from localStorage */
     const cart = getCart().filter((i) => String(i.id) !== String(id));
     saveCart(cart);
-
     recalculate();
     showToast('"' + name + '" removed from cart');
-  }, 250);
+  }, 380);
 }
 
-/* ── Clear cart ── */
+/* ── Clear entire cart ── */
 function clearCart() {
-  document
-    .querySelectorAll("#cartItemsList .cart-item")
-    .forEach((el) => el.remove());
-  saveCart([]);
-  recalculate();
-  showToast("Cart cleared");
+  if (typeof Swal !== "undefined") {
+    Swal.fire({
+      title: "Clear Cart?",
+      text: "All items will be removed from your cart.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#dc1717",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, clear it",
+      cancelButtonText: "Keep items",
+      reverseButtons: true,
+      customClass: { container: "high-z-index" },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document
+          .querySelectorAll("#cartItemsList .cart-item")
+          .forEach((el) => el.remove());
+        saveCart([]);
+        recalculate();
+        showToast("Cart cleared");
+      }
+    });
+  } else {
+    if (!confirm("Clear all items from your cart?")) return;
+    document
+      .querySelectorAll("#cartItemsList .cart-item")
+      .forEach((el) => el.remove());
+    saveCart([]);
+    recalculate();
+    showToast("Cart cleared");
+  }
 }
 
-/* ── Toast ── */
+/* ── Toast notification ── */
 function showToast(msg) {
   const t = document.getElementById("toast");
   if (!t) return;
-  document.getElementById("toastMsg").textContent = msg;
+  const msgEl = document.getElementById("toastMsg");
+  if (msgEl) msgEl.textContent = msg;
   t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 2800);
+  clearTimeout(t._toastTimer);
+  t._toastTimer = setTimeout(() => t.classList.remove("show"), 2800);
 }
 
 /* ── Payment method selection ── */
@@ -288,145 +332,217 @@ function resetPaymentSteps() {
     ["pstep2", "pstep2dot", "2"],
     ["pstep3", "pstep3dot", "3"],
   ].forEach(([s, d, n]) => {
-    document.getElementById(s).className = "payment-step";
-    document.getElementById(d).textContent = n;
+    const stepEl = document.getElementById(s);
+    const dotEl = document.getElementById(d);
+    if (stepEl) stepEl.className = "payment-step";
+    if (dotEl) dotEl.textContent = n;
   });
-  document.getElementById("paymentTitle").textContent = "Processing Payment";
-  document.getElementById("paymentSub").textContent =
-    "Please wait, do not close this window...";
-  document.getElementById("paymentSpinner").className = "payment-spinner";
-  document.getElementById("paymentSpinnerWrap").className =
-    "payment-spinner-wrap";
+
+  const titleEl = document.getElementById("paymentTitle");
+  const subEl = document.getElementById("paymentSub");
+  const spinEl = document.getElementById("paymentSpinner");
+  const wrapEl = document.getElementById("paymentSpinnerWrap");
+
+  if (titleEl) titleEl.textContent = "Processing Payment";
+  if (subEl) subEl.textContent = "Please wait, do not close this window...";
+  if (spinEl) spinEl.className = "payment-spinner";
+  if (wrapEl) wrapEl.className = "payment-spinner-wrap";
 }
 
 function setStep(stepId, dotId, state) {
   const el = document.getElementById(stepId);
   const dot = document.getElementById(dotId);
-  el.className = "payment-step " + state;
-  if (state === "done") dot.textContent = "✓";
+  if (el) el.className = "payment-step " + state;
+  if (dot && state === "done") dot.textContent = "✓";
 }
 
-/* ── Main checkout ── */
+/* ── Main checkout trigger ── */
 function proceedCheckout() {
   const items = document.querySelectorAll("#cartItemsList .cart-item");
   if (!items.length) return;
 
-  const method =
-    document.querySelector('input[name="payment"]:checked')?.value || "GCash";
-  const total = document.getElementById("summaryTotal").textContent;
+  const methodInput = document.querySelector('input[name="payment"]:checked');
+  const method = methodInput ? methodInput.value : "GCash";
+  const totalEl = document.getElementById("summaryTotal");
+  const total = totalEl ? totalEl.textContent : "₱0.00";
 
-  document.getElementById("paymentChipMethod").textContent = method;
-  document.getElementById("paymentChipTotal").textContent = total;
-  document.getElementById("pstep2Label").textContent =
-    "Processing payment via " + method;
+  const chipMethodEl = document.getElementById("paymentChipMethod");
+  const chipTotalEl = document.getElementById("paymentChipTotal");
+  const step2LabelEl = document.getElementById("pstep2Label");
+
+  if (chipMethodEl) chipMethodEl.textContent = method;
+  if (chipTotalEl) chipTotalEl.textContent = total;
+  if (step2LabelEl)
+    step2LabelEl.textContent = "Processing payment via " + method;
 
   resetPaymentSteps();
 
   const btn = document.getElementById("checkoutBtn");
-  btn.disabled = true;
+  if (btn) btn.disabled = true;
 
-  document.getElementById("paymentOverlay").classList.remove("hidden");
+  const overlay = document.getElementById("paymentOverlay");
+  if (overlay) overlay.classList.remove("hidden");
   document.body.style.overflow = "hidden";
 
+  /* Animated steps */
   setTimeout(() => setStep("pstep1", "pstep1dot", "active"), 200);
   setTimeout(() => {
     setStep("pstep1", "pstep1dot", "done");
     setStep("pstep2", "pstep2dot", "active");
-  }, 1300);
+  }, 1400);
   setTimeout(() => {
     setStep("pstep2", "pstep2dot", "done");
     setStep("pstep3", "pstep3dot", "active");
-  }, 2700);
+  }, 2800);
   setTimeout(() => {
     setStep("pstep3", "pstep3dot", "done");
-    document.getElementById("paymentSpinner").className =
-      "payment-spinner done";
-    document.getElementById("paymentSpinnerWrap").className =
-      "payment-spinner-wrap done";
-    document.getElementById("paymentTitle").textContent = "Order Confirmed!";
-    document.getElementById("paymentSub").textContent =
-      "Redirecting to your order summary...";
-  }, 4000);
+    const spinEl = document.getElementById("paymentSpinner");
+    const wrapEl = document.getElementById("paymentSpinnerWrap");
+    const titleEl = document.getElementById("paymentTitle");
+    const subEl = document.getElementById("paymentSub");
+    if (spinEl) spinEl.className = "payment-spinner done";
+    if (wrapEl) wrapEl.className = "payment-spinner-wrap done";
+    if (titleEl) titleEl.textContent = "Order Confirmed!";
+    if (subEl) subEl.textContent = "Redirecting to your order summary...";
+  }, 4100);
 
   setTimeout(() => {
-    document.getElementById("paymentOverlay").classList.add("hidden");
-    btn.disabled = false;
+    if (overlay) overlay.classList.add("hidden");
+    if (btn) btn.disabled = false;
+
+    /* Snapshot items BEFORE clearing cart */
     openOrderConfirmation();
 
-    /* Clear cart after successful "order" */
+    /* Clear cart */
     saveCart([]);
-  }, 4900);
+  }, 5000);
 }
 
 /* ── Order confirmation overlay ── */
 function openOrderConfirmation() {
-  const payment =
-    document.querySelector('input[name="payment"]:checked')?.value ||
-    "Over the Counter";
+  const methodInput = document.querySelector('input[name="payment"]:checked');
+  const payment = methodInput ? methodInput.value : "Over the Counter";
   const orderId = generateOrderId();
-  document.getElementById("confirmOrderId").textContent = orderId;
+
+  const confirmOrderIdEl = document.getElementById("confirmOrderId");
+  if (confirmOrderIdEl) confirmOrderIdEl.textContent = orderId;
 
   const now = new Date();
-  document.getElementById("trackerTime").textContent =
-    now.toLocaleDateString("en-PH", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }) +
-    " · " +
-    now.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit" });
+  const trackerTimeEl = document.getElementById("trackerTime");
+  if (trackerTimeEl) {
+    trackerTimeEl.textContent =
+      now.toLocaleDateString("en-PH", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }) +
+      " · " +
+      now.toLocaleTimeString("en-PH", { hour: "2-digit", minute: "2-digit" });
+  }
 
+  /* Populate order items from current DOM (before clear) */
   const items = document.querySelectorAll("#cartItemsList .cart-item");
   const listEl = document.getElementById("confirmItemsList");
-  listEl.innerHTML = "";
-  items.forEach((item) => {
-    const name = item.querySelector(".cart-item-name").textContent;
-    const qty = parseInt(item.querySelector(".qty-value").textContent);
-    const price = parseFloat(item.dataset.price);
-    const row = document.createElement("div");
-    row.className = "confirm-item";
-    row.innerHTML = `
-            <span class="confirm-item-name">${escHtml(name)}</span>
-            <span class="confirm-item-qty">×${qty}</span>
-            <span class="confirm-item-price">${formatPHP(price * qty)}</span>
-        `;
-    listEl.appendChild(row);
-  });
+  if (listEl) {
+    listEl.innerHTML = "";
+    items.forEach((item) => {
+      const nameEl = item.querySelector(".cart-item-name");
+      const qtyEl = item.querySelector(".qty-value");
+      const name = nameEl ? nameEl.textContent : "Item";
+      const qty = qtyEl ? parseInt(qtyEl.textContent) : 1;
+      const price = parseFloat(item.dataset.price) || 0;
 
-  document.getElementById("confirmPayment").textContent = payment;
-  document.getElementById("confirmTotal").textContent =
-    document.getElementById("summaryTotal").textContent;
+      const row = document.createElement("div");
+      row.className = "confirm-item";
+      row.innerHTML = `
+                <span class="confirm-item-name">${escHtml(name)}</span>
+                <span class="confirm-item-qty">&#215;${qty}</span>
+                <span class="confirm-item-price">${formatPHP(price * qty)}</span>
+            `;
+      listEl.appendChild(row);
+    });
+  }
 
-  document.getElementById("orderOverlay").classList.remove("hidden");
-  document.body.style.overflow = "hidden";
+  const confirmPaymentEl = document.getElementById("confirmPayment");
+  const confirmTotalEl = document.getElementById("confirmTotal");
+  const summaryTotalEl = document.getElementById("summaryTotal");
+
+  if (confirmPaymentEl) confirmPaymentEl.textContent = payment;
+  if (confirmTotalEl && summaryTotalEl) {
+    confirmTotalEl.textContent = summaryTotalEl.textContent;
+  }
+
+  const orderOverlay = document.getElementById("orderOverlay");
+  if (orderOverlay) {
+    orderOverlay.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  }
 }
 
-/* ── Nav scroll (reuse your existing pattern) ── */
-window.addEventListener("scroll", () => {
-  const nav = document.querySelector("nav");
-  if (nav) nav.classList.toggle("scrolled", window.scrollY > 50);
-});
+/* ── Close overlays when clicking backdrop ── */
+function initOverlayClose() {
+  const paymentOverlay = document.getElementById("paymentOverlay");
+  const orderOverlay = document.getElementById("orderOverlay");
 
-/* ── Init ── */
+  if (orderOverlay) {
+    orderOverlay.addEventListener("click", function (e) {
+      /* Only close if clicking the dark backdrop, not the sheet */
+      if (e.target === orderOverlay) {
+        orderOverlay.classList.add("hidden");
+        document.body.style.overflow = "";
+        /* Re-render after cart was cleared */
+        renderCart();
+      }
+    });
+  }
+
+  /* Payment overlay should NOT be dismissible — user must wait */
+}
+
+/* ── Navbar scroll behaviour ──
+   Identical to nav.js — transparent at top,
+   solid gradient after scrolling 50px down,
+   blends back into header when at the top. ── */
+function updateNav() {
+  const nav = document.querySelector("nav");
+  if (!nav) return;
+  if (window.scrollY > 50) {
+    nav.classList.add("scrolled");
+  } else {
+    nav.classList.remove("scrolled");
+  }
+}
+
+/*try lang boi*/
 document.addEventListener("DOMContentLoaded", () => {
   if (getCart().length === 0) {
     saveCart([
       {
-        id: 9001,
-        name: "PE Uniform (Top + Bottom)",
-        price: 725,
-        image: "",
-        qty: 2,
-      },
-      {
-        id: 9002,
-        name: "Mathematics Textbook Gr. 11",
-        price: 320,
+        id: 1,
+        name: "Art Appreciation Textbook",
+        price: 320.0,
         image: "",
         qty: 1,
       },
+      { id: 2, name: "PE Uniform (Type A)", price: 725.0, image: "", qty: 2 },
+      { id: 3, name: "SSC-R Hoodie", price: 580.0, image: "", qty: 1 },
     ]);
   }
   renderCart();
   updateNavCartCount();
+  initOverlayClose();
+  window.addEventListener("scroll", updateNav);
+  updateNav();
+});
+
+/* ════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════ */
+document.addEventListener("DOMContentLoaded", () => {
+  renderCart();
+  updateNavCartCount();
+  initOverlayClose();
+
+  window.addEventListener("scroll", updateNav);
+  updateNav();
 });

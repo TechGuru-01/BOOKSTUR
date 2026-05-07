@@ -6,14 +6,11 @@ $msg_text = "";
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $product_id = isset($_POST['product_id']) ? intval($_POST['product_id']) : 0;
-    // Siguraduhin na ang producttype ay walang spaces o maling characters
     $targetTable = strtolower(trim($_POST['producttype'] ?? ''));
     $product_name = trim($_POST['product_name'] ?? '');
     $category_id = isset($_POST['category_id']) ? intval($_POST['category_id']) : 0;
     $description = trim($_POST['description'] ?? '');
     $price = floatval($_POST['price'] ?? 0);
-
-    // Tama ito pre, match ito sa name="stocks[XS]" ng JS natin
     $stock_xs  = intval($_POST['stocks']['XS'] ?? 0);
     $stock_s   = intval($_POST['stocks']['S'] ?? 0);
     $stock_m   = intval($_POST['stocks']['M'] ?? 0);
@@ -32,15 +29,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         exit;
     }
 
-    // Get old image first
     $stmt_old = $conn->prepare("SELECT product_image FROM $targetTable WHERE product_id = ?");
     $stmt_old->bind_param("i", $product_id);
     $stmt_old->execute();
     $res_old = $stmt_old->get_result();
     $old_data = $res_old->fetch_assoc();
-    $image_file_name = $old_data['product_image'] ?? 'placeholder.jpg';
+    $image_file_name = $old_data['product_image'] ?? '../../src/placeholder.jpg';
 
-    // Handle Image Upload
     if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] == 0) {
         $upload_dir = __DIR__ . "/../src/uploads/products/";
         $file_ext = strtolower(pathinfo($_FILES['product_image']['name'], PATHINFO_EXTENSION));
@@ -103,7 +98,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $msg_text = "System Error: " . $e->getMessage();
     }
 
-    // JSON Response
     header('Content-Type: application/json');
     echo json_encode([
         'status' => $status,

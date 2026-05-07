@@ -2,7 +2,7 @@
 require_once '../../include/config.php';
 require_once '../../include/auth_checker.php';
 require_once '../../include/libraryResponseHandler.php';
-
+$tableName = 'books';
 $current_table = $_GET['table'] ?? 'books';
 ?>
 <!DOCTYPE html>
