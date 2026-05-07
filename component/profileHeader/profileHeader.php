@@ -8,5 +8,5 @@
                 <h1><?php echo htmlspecialchars($current_user['full_name']); ?></h1>
                 <p class="student-id">Student ID:<?php echo htmlspecialchars($current_user['student_number']); ?></p>
         </div>
-    </div>
+</div>
 </header>

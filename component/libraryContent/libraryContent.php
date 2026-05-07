@@ -23,20 +23,22 @@ if (!$result) {
             $isBook = ($row['display_name'] === 'Books' || $row['display_name'] === 'Academic Tools');
 
             $productData = [
-                "id"           => $row["product_id"],
+                "product_id"   => $row["product_id"],
                 "product_name" => $row["product_name"],
                 "price"        => $row["price"],
                 "category_id"  => $row["category_id"],
                 "is_book"      => $isBook,
                 "table"        => $currentTable,
-                "img"          => $row["product_image"],
+                "product_image"=> $row["product_image"],
                 "description"  => $row["description"],
-                "stocks"       => [
-                    "S"  => $row["stock_quantity"] ?? 0, 
-                    "M"  => $row["stock_m"] ?? 0,       
-                    "L"  => $row["stock_l"] ?? 0,
-                    "XL" => $row["stock_xl"] ?? 0
-                ]
+                "stock_xs"     => $row["stock_xs"] ?? 0,
+                "stock_quantity" => $row["stock_quantity"] ?? 0,
+                "stock_m"      => $row["stock_m"] ?? 0,
+                "stock_l"      => $row["stock_l"] ?? 0,
+                "stock_xl"     => $row["stock_xl"] ?? 0,
+                "stock_2xl"    => $row["stock_2xl"] ?? 0,
+                "stock_3xl"    => $row["stock_3xl"] ?? 0,
+                "stock_4xl"    => $row["stock_4xl"] ?? 0
             ];
             ?>
             
@@ -63,7 +65,14 @@ if (!$result) {
                         if ($isBook) {
                             echo "Stock: " . ($row['stock_quantity'] ?? 0);
                         } else {
-                            $total = ($row['stock_quantity'] ?? 0) + ($row['stock_m'] ?? 0) + ($row['stock_l'] ?? 0) + ($row['stock_xl'] ?? 0);
+                            $total = ($row['stock_xs'] ?? 0) + 
+                                     ($row['stock_quantity'] ?? 0) + 
+                                     ($row['stock_m'] ?? 0) + 
+                                     ($row['stock_l'] ?? 0) + 
+                                     ($row['stock_xl'] ?? 0) + 
+                                     ($row['stock_2xl'] ?? 0) + 
+                                     ($row['stock_3xl'] ?? 0) + 
+                                     ($row['stock_4xl'] ?? 0);
                             echo "Total Stock: " . $total;
                         }
                         ?>

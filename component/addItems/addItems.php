@@ -67,9 +67,10 @@
                             <label>Stock</label>
                             <input type="number" name="stock"  placeholder="0">
                         </div>
-                        <div id="dynamicStockSection" style="flex: 2; min-width: 200px;">
-                        </div>
+                        
                     </div>
+                    <div id="dynamicStockSection" style="flex: 2; min-width: 200px;">
+                        </div>
                     
                     <div class="input-group">
                         <label>Description</label>

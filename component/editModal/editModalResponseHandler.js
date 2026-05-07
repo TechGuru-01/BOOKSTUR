@@ -31,7 +31,7 @@ document.querySelector("#editForm").addEventListener("submit", function (e) {
               timer: 1500,
             }).then(() => {
               this.reset();
-              closeModal();
+              closeEditModal();
               location.reload();
             });
           } else {

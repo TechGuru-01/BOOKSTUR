@@ -12,10 +12,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $product_name = trim($_POST['product_name'] ?? '');
     $category_id = isset($_POST['category_id']) ? intval($_POST['category_id']) : 0;
     $description = trim($_POST['description'] ?? '');
-    $stock_s = intval($_POST['stocks']['S'] ?? 0);
-    $stock_m = intval($_POST['stocks']['M'] ?? 0);
-    $stock_l = intval($_POST['stocks']['L'] ?? 0);
+    
+    $stock_xs = intval($_POST['stocks']['XS'] ?? 0);
+    $stock_s  = intval($_POST['stocks']['S'] ?? 0);
+    $stock_m  = intval($_POST['stocks']['M'] ?? 0);
+    $stock_l  = intval($_POST['stocks']['L'] ?? 0);
     $stock_xl = intval($_POST['stocks']['XL'] ?? 0);
+    $stock_2xl = intval($_POST['stocks']['2XL'] ?? 0);
+    $stock_3xl = intval($_POST['stocks']['3XL'] ?? 0);
+    $stock_4xl = intval($_POST['stocks']['4XL'] ?? 0);
+    
     $price = floatval($_POST['price'] ?? 0);
 
     $stmt_check = mysqli_prepare($conn, "SELECT table_name FROM product_types WHERE LOWER(table_name) = ?");
@@ -43,46 +49,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
             }
         }
 
-       try {
+        try {
             $price_val = floatval($price);
-            $stock_val = intval($stock_s); 
-            $status_db = ($stock_val + $stock_m + $stock_l + $stock_xl > 0) ? 'Available' : 'Out of Stock';
-            $size_placeholder = "N/A"; 
+            $total_stock = $stock_xs + $stock_s + $stock_m + $stock_l + $stock_xl + $stock_2xl + $stock_3xl + $stock_4xl;
+            $status_db = ($total_stock > 0) ? 'Available' : 'Out of Stock';
 
             if ($targetTable === 'books' || $targetTable === 'academic_tools') {
                 $query = "INSERT INTO $targetTable (category_id, product_name, description, status, price, stock_quantity, product_image) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 $stmt = mysqli_prepare($conn, $query);
                 if ($stmt) {
-                    mysqli_stmt_bind_param($stmt, "isssdss", $category_id, $product_name, $description, $status_db, $price_val, $stock_val, $image_file_name);
+                    mysqli_stmt_bind_param($stmt, "isssdss", $category_id, $product_name, $description, $status_db, $price_val, $stock_s, $image_file_name);
                 }
             } 
             else {
-                $query = "INSERT INTO $targetTable (category_id, product_name, description, status, price, stock_quantity, stock_m, stock_l, stock_xl, size, product_image) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                $query = "INSERT INTO $targetTable (category_id, product_name, description, status, price, stock_quantity, stock_m, stock_l, stock_xl, product_image, stock_xs, stock_2xl, stock_3xl, stock_4xl) 
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 
                 $stmt = mysqli_prepare($conn, $query);
                 if ($stmt) {
-                    mysqli_stmt_bind_param($stmt, "isssdiiiiss", 
+                    mysqli_stmt_bind_param($stmt, "isssdiiiisiiii", 
                         $category_id,    
                         $product_name,   
                         $description,   
                         $status_db,      
                         $price_val,      
-                        $stock_s,       
+                        $stock_s,
                         $stock_m,        
                         $stock_l,        
-                        $stock_xl,      
-                        $size_placeholder, 
-                        $image_file_name   
+                        $stock_xl,
+                        $image_file_name,
+                        $stock_xs,
+                        $stock_2xl,
+                        $stock_3xl,
+                        $stock_4xl
                     );
                 }
             }
             
             if ($stmt && mysqli_stmt_execute($stmt)) {
                 $status = "success";
-                $msg_text = "Product successfully added to " . ucfirst($targetTable) . "!";
+                $msg_text = "Product successfully added!";
             } else {
-                $msg_text = "SQL Error: " . mysqli_error($conn) . " | Statement Error: " . mysqli_stmt_error($stmt);
+                $msg_text = "SQL Error: " . mysqli_error($conn);
             }
         } catch (Exception $e) {
             $msg_text = "Error: " . $e->getMessage();
