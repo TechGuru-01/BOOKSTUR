@@ -15,9 +15,6 @@ if ($is_admin) {
     $status = "error";
     $msg_text = "";
 
-    
-   
-
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
         $delete_query = $conn->prepare("DELETE FROM users WHERE id = ?");
@@ -36,12 +33,9 @@ if ($is_admin) {
         ]);
         exit;
     }
-    // Magkasama dapat ito sa taas ng profile.php kasama ng Delete logic
     if (isset($_GET['reset_id']) && isset($_GET['new_password'])) {
         $id = (int) $_GET['reset_id'];
         $new_pass = $_GET['new_password'];
-
-        // I-hash ang bagong password
         $hashed_password = password_hash($new_pass, PASSWORD_DEFAULT);
 
         $update_query = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
