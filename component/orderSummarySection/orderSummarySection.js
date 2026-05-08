@@ -84,7 +84,7 @@ function proceedCheckout() {
             clearInterval(interval);
             showSuccessOverlay(data.order_id, totalAmount, paymentMethod);
           }
-        }, 800); // 800ms kada step
+        }, 800);
       } else {
         paymentOverlay.classList.add("hidden");
         Swal.fire("Error", data.msg, "error");
