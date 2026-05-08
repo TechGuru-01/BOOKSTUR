@@ -1463,10 +1463,16 @@
 }
 
 /* ── Protect adminUtils FAB styles from Cart.css overrides ── */
-.ubuntu-item {
-  white-space: nowrap !important;
-  width: 200px !important;
-  min-height: unset !important;
-  height: auto !important;
-  align-items: center !important;
+.cart-select-wrapper {
+  display: flex;
+  align-items: center;
+  padding-right: 10px;
+}
+
+.item-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #dc1717;
+  /* Red match sa theme mo */
 }

@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $quantity = intval($_POST['quantity'] ?? 1);
     $notes = trim($_POST['notes'] ?? '');
     $selected_size = $_POST['selected_size'] ?? null;
+    $product_image = trim($_POST['product_image'] ?? '');
 
     if ($user_id <= 0 || $product_id <= 0 || empty($product_type)) {
         $msg_text = "Invalid Session or Product Data";
@@ -29,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             } else {
                 $size_lower = strtolower($selected_size);
                 if ($size_lower === 's') {
-                    $stock_column = "stock_quantity";
+                    $stock_column = "stock_s";
                 } elseif (in_array($size_lower, ['xs', 'm', 'l', 'xl', '2xl', '3xl', '4xl'])) {
                     $stock_column = "stock_" . $size_lower;
                 } else {
@@ -64,9 +65,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     $update_cart->bind_param("ii", $new_cart_qty, $existing['cart_id']);
                     $update_cart->execute();
                 } else {
-                    $insert_cart = $conn->prepare("INSERT INTO cart (user_id, product_id, product_name, product_type, price, size, quantity, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-                    $insert_cart->bind_param("iissdsis", $user_id, $product_id, $product_name, $product_type, $price, $selected_size, $quantity, $notes);
+                   $insert_cart = $conn->prepare("INSERT INTO cart (user_id, product_id, product_name, product_type, price, size, quantity, notes, product_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    // 9 parameters: i (user), i (prod_id), s (name), s (type), d (price), s (size), i (qty), s (notes), s (image)
+                    $insert_cart->bind_param("iissdsiss", $user_id, $product_id, $product_name, $product_type, $price, $selected_size, $quantity, $notes, $product_image);
                     $insert_cart->execute();
+                    // Tinanggal ang duplicate na execute dito
                 }
 
                 $conn->commit();

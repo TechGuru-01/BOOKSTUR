@@ -62,6 +62,11 @@ $home_url = $is_dashboard ? 'javascript:window.scrollTo({top: 0, behavior: \'smo
                 <span class="material-icons-outlined">home</span> HOME
             </a>
         </li>
+        <li>
+            <a  href="#footer">
+                <span class="material-icons-outlined">phone</span> Contact us
+            </a>
+        </li>
 
         <!-- Collapsible Shop Section -->
         <li class="has-submenu display-on-mobile">

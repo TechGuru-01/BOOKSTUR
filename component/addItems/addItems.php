@@ -3,7 +3,7 @@
        
         
         <form  action="../../include/appendFunction.php" method="POST" enctype="multipart/form-data" id="appendItemsForm">
-            <div class="modal-header">
+            <div class="append-modal-header">
                 <h2>Add new</h2>
                 
                 <select name="producttype" id="productType">
@@ -63,11 +63,7 @@
                             <label>Price (₱)</label>
                             <input type="number" name="price" step="0.01"  placeholder="0.00">
                         </div>
-                        <div class="input-group" style="flex: 1;">
-                            <label>Stock</label>
-                            <input type="number" name="stock"  placeholder="0">
-                        </div>
-                        
+                       
                     </div>
                     <div id="dynamicStockSection" style="flex: 2; min-width: 200px;">
                         </div>

@@ -33,7 +33,7 @@ function openEditModal(product) {
     stockTableBody.innerHTML = `
             <tr>
                 <td><strong>Quantity</strong></td>
-                <td><input type="number" name="stocks[S]" id="stock_S" class="edit-input-field" min="0" value="${product.stock_quantity || 0}"></td>
+                <td><input type="number" name="stocks[S]" id="stock_s" class="edit-input-field" min="0" value="${product.stock_quantity || 0}"></td>
             </tr>
         `;
   } else {

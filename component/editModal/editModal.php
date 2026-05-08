@@ -24,12 +24,12 @@ $productType = $_GET['producttype'] ?? '';
                 </div>
 
                 <div class="edit-details-section">
-                    <div class="edit-row">
+                   
                         <div style="grid-column: span 2;">
                             <label>Product Name</label>
                             <input type="text" name="product_name" id="edit_name" class="edit-input-field" required>
                         </div>
-                    </div>
+                   
 
                     <div class="edit-row">
                         <div>
@@ -68,8 +68,8 @@ $productType = $_GET['producttype'] ?? '';
                     
                     <hr>
                     <div class="edit-modal-actions">
-                        <button type="button" class="edit-btn-cancel" onclick="closeEditModal()">Cancel</button>
-                        <button type="submit" class="edit-btn-save">Save Changes</button>
+                        <button type="button" class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+                        <button type="submit" class="btn-save">Save Changes</button>
                     </div>
                 </div>
             </div>

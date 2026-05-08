@@ -2,6 +2,7 @@
 require_once '../../include/config.php';
 require_once '../../include/auth_checker.php';
 
+
 $user_id = $_SESSION['user_id'];
 $user_query = $conn->prepare("SELECT * FROM users WHERE id = ?");
 $user_query->bind_param("i", $user_id);
@@ -112,6 +113,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit;
 }
 
+$query = "SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$orders_result = $stmt->get_result();
+$order_id = intval($_GET['order_id']);
+
+
+
 
 ?>
 <!DOCTYPE html>
@@ -124,6 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <link rel="stylesheet" href="../../component/footer/footer.css">
     <link rel="stylesheet" href="../../component/profileHeader/profileHeader.css">
     <link rel="stylesheet" href="../../component/profileNav/profileNav.css">
+    <link rel="stylesheet" href="../../component/profileTransactionTab/profileTransactionTab.css">
     <link rel="stylesheet" href="../../component/profileUserTab/profileUserTab.css">
     <link rel="stylesheet" href="../../component/logoutModal/logoutModal.css">
     <link rel="stylesheet" href="../../component/addItems/addItems.css">
@@ -170,6 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <script src = "../../component/profileUserTab/profileUserTab.js"></script>
         <script src="../../component/navbar/nav.js"></script>
         <script src="../../component/profileSettingsTab/profileSetting.js"></script>
+         <script src="../../component/profileTransactionTab/profileTransactionTab.js"></script>
         <script src="../../component/addItems/addItems.js"></script>
         <script src="../../component/adminUtils/adminUtils.js"></script>
         <script src="../../component/logoutModal/logoutModal.js"></script>

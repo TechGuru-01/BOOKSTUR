@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                 }
             } 
             else {
-                $query = "INSERT INTO $targetTable (category_id, product_name, description, status, price, stock_quantity, stock_m, stock_l, stock_xl, product_image, stock_xs, stock_2xl, stock_3xl, stock_4xl) 
+                $query = "INSERT INTO $targetTable (category_id, product_name, description, status, price, stock_s, stock_m, stock_l, stock_xl, product_image, stock_xs, stock_2xl, stock_3xl, stock_4xl) 
                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 
                 $stmt = mysqli_prepare($conn, $query);

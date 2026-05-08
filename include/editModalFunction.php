@@ -58,7 +58,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 status = ?, 
                 price = ?, 
                 stock_xs = ?,
-                stock_quantity = ?, 
+                stock_s = ?, 
                 stock_m = ?, 
                 stock_l = ?, 
                 stock_xl = ?, 

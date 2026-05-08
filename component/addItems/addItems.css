@@ -20,7 +20,7 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.modal-header {
+.append-modal-header{
   position: relative;
   padding-bottom: 15px;
   margin-bottom: 20px;
@@ -30,7 +30,7 @@
 }
 
 /* Premium Gradient Header Line */
-.modal-header::after {
+.append-modal-header::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -41,7 +41,7 @@
   border-radius: 3px;
 }
 
-.modal-header h2 {
+.append-modal-header h2 {
   font-family: 'Poppins', sans-serif;
   color: #8B0000;
   font-weight: 800;

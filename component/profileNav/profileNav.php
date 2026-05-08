@@ -1,3 +1,7 @@
+
+<?php 
+
+?>
 <aside class="dashboard-sidebar">
     <div class="identity-pill">
         <div class="pill-brand"> <span class="material-icons-outlined">account_circle</span>ACCOUNT</div>

@@ -3,6 +3,7 @@ $raw_pos = $_SESSION['course'] ?? 'NOT_SET';
 $current_position = strtoupper(trim($raw_pos)); 
 $isAdmin = ($current_position === 'ADMIN' || $current_position === 'SUPER ADMIN');
 $currentTable = $tableName ?? 'books'; 
+
 $query = "SELECT b.*, pt.display_name 
           FROM $currentTable b 
           JOIN product_types pt ON pt.table_name = '$currentTable'"; 
@@ -18,27 +19,52 @@ if (!$result) {
     <?php
     if ($result && mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
-            $status_class = ($row['status'] === 'Available') ? 'status-available' : 'status-out';
-            $image_path = "../../src/uploads/products/" . $row['product_image'];
             $isBook = ($row['display_name'] === 'Books' || $row['display_name'] === 'Academic Tools');
+            
+            if ($isBook) {
+                $totalStock = $row['stock_quantity'] ?? 0;
+                $displayStockLabel = "Stock: " . $totalStock;
+            } else {
+
+                $totalStock = ($row['stock_xs'] ?? 0) + 
+                             ($row['stock_s'] ?? 0) + 
+                             ($row['stock_m'] ?? 0) + 
+                             ($row['stock_l'] ?? 0) + 
+                             ($row['stock_xl'] ?? 0) + 
+                             ($row['stock_2xl'] ?? 0) + 
+                             ($row['stock_3xl'] ?? 0) + 
+                             ($row['stock_4xl'] ?? 0);
+                $displayStockLabel = "Total Stock: " . $totalStock;
+            }
+
+            if ($totalStock <= 0) {
+                $currentStatus = "Unavailable";
+                $status_class = "status-out";
+            } else {
+                $currentStatus = $row['status'] ?? "Available";
+                $status_class = ($currentStatus === 'Available') ? 'status-available' : 'status-out';
+            }
+
+            $image_path = "../../src/uploads/products/" . $row['product_image'];
 
             $productData = [
-                "product_id"   => $row["product_id"],
-                "product_name" => $row["product_name"],
-                "price"        => $row["price"],
-                "category_id"  => $row["category_id"],
-                "is_book"      => $isBook,
-                "table"        => $currentTable,
-                "product_image"=> $row["product_image"],
-                "description"  => $row["description"],
-                "stock_xs"     => $row["stock_xs"] ?? 0,
-                "stock_quantity" => $row["stock_quantity"] ?? 0,
-                "stock_m"      => $row["stock_m"] ?? 0,
-                "stock_l"      => $row["stock_l"] ?? 0,
-                "stock_xl"     => $row["stock_xl"] ?? 0,
-                "stock_2xl"    => $row["stock_2xl"] ?? 0,
-                "stock_3xl"    => $row["stock_3xl"] ?? 0,
-                "stock_4xl"    => $row["stock_4xl"] ?? 0
+                "product_id"    => $row["product_id"],
+                "product_name"  => $row["product_name"],
+                "price"         => $row["price"],
+                "category_id"   => $row["category_id"],
+                "is_book"       => $isBook,
+                "table"         => $currentTable,
+                "product_image" => $row["product_image"],
+                "description"   => $row["description"],
+                "stock_quantity"=> $totalStock,
+                "stock_xs"      => $row["stock_xs"] ?? 0,
+                "stock_s"=> $row["stock_s"] ?? 0,
+                "stock_m"       => $row["stock_m"] ?? 0,
+                "stock_l"       => $row["stock_l"] ?? 0,
+                "stock_xl"      => $row["stock_xl"] ?? 0,
+                "stock_2xl"     => $row["stock_2xl"] ?? 0,
+                "stock_3xl"     => $row["stock_3xl"] ?? 0,
+                "stock_4xl"     => $row["stock_4xl"] ?? 0
             ];
             ?>
             
@@ -49,7 +75,7 @@ if (!$result) {
                          alt="<?php echo htmlspecialchars($row['product_name']); ?>">
                     
                     <span class="status-tag <?php echo $status_class; ?>">
-                        <?php echo htmlspecialchars($row['status']); ?>
+                        <?php echo htmlspecialchars($currentStatus); ?>
                     </span>
                 </div>
                 
@@ -61,20 +87,7 @@ if (!$result) {
                     <p class="price">₱<?php echo number_format($row['price'], 2); ?></p>
                     
                     <p style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">
-                        <?php 
-                        if ($isBook) {
-                            echo "Stock: " . ($row['stock_quantity'] ?? 0);
-                        } else {
-                            $total = ($row['stock_xs'] ?? 0) + 
-                                     ($row['stock_m'] ?? 0) + 
-                                     ($row['stock_l'] ?? 0) + 
-                                     ($row['stock_xl'] ?? 0) + 
-                                     ($row['stock_2xl'] ?? 0) + 
-                                     ($row['stock_3xl'] ?? 0) + 
-                                     ($row['stock_4xl'] ?? 0);
-                            echo "Total Stock: " . $total;
-                        }
-                        ?>
+                        <?php echo $displayStockLabel; ?>
                     </p>
                     
                     <?php if ($isAdmin): ?>
@@ -84,9 +97,12 @@ if (!$result) {
                             Edit Product
                         </button>
                     <?php else: ?>
-                      <button type="button" class="add-btn btn-cart" 
-                            onclick='openCartModal(<?php echo htmlspecialchars(json_encode($productData), ENT_QUOTES, "UTF-8"); ?>)'>
-                            Add to Cart
+
+                        <button type="button" 
+                                class="add-btn btn-cart" 
+                                <?php echo ($totalStock <= 0) ? 'disabled style="background: #ccc; cursor: not-allowed;"' : ''; ?>
+                                onclick='openCartModal(<?php echo htmlspecialchars(json_encode($productData), ENT_QUOTES, "UTF-8"); ?>)'>
+                            <?php echo ($totalStock <= 0) ? 'Out of Stock' : 'Add to Cart'; ?>
                         </button>
                     <?php endif; ?>
                 </div>
