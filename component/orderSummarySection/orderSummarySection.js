@@ -42,15 +42,15 @@ function proceedCheckout() {
   const totalAmount = document.getElementById("summaryTotal").textContent;
   const notes = document.getElementById("orderNotes").value;
 
-  // 1. Ipakita ang Payment Overlay
+
   const paymentOverlay = document.getElementById("paymentOverlay");
   paymentOverlay.classList.remove("hidden");
 
-  // I-set ang initial details sa chip
+
   document.getElementById("paymentChipMethod").textContent = paymentMethod;
   document.getElementById("paymentChipTotal").textContent = totalAmount;
 
-  // Animation Steps (Fake Loading for UX)
+
   const steps = [
     { dot: "pstep1dot", item: "pstep1" },
     { dot: "pstep2dot", item: "pstep2" },
@@ -65,7 +65,7 @@ function proceedCheckout() {
   formData.append("payment_method", paymentMethod);
   formData.append("notes", notes);
 
-  // Tawagin na ang PHP
+
   fetch("cart.php", {
     method: "POST",
     body: formData,
@@ -73,11 +73,10 @@ function proceedCheckout() {
     .then((res) => res.json())
     .then((data) => {
       if (data.status === "success") {
-        // Simulan ang step animation pagka-receive ng success sa server
         const interval = setInterval(() => {
           if (currentStep < steps.length) {
             const step = steps[currentStep];
-            document.getElementById(step.item).classList.add("active"); // assuming may 'active' class ka sa CSS
+            document.getElementById(step.item).classList.add("active");
             document.getElementById(step.dot).innerHTML = "check";
             document.getElementById(step.dot).style.background = "#28a745";
             currentStep++;
@@ -98,21 +97,17 @@ function proceedCheckout() {
 }
 
 function showSuccessOverlay(orderId, total, method) {
-  // 1. Itago ang Processing Overlay
   document.getElementById("paymentOverlay").classList.add("hidden");
 
-  // 2. Ipakita ang Order Overlay
   const orderOverlay = document.getElementById("orderOverlay");
   orderOverlay.classList.remove("hidden");
 
-  // 3. I-update ang mga details sa Success Screen
   document.getElementById("confirmOrderId").textContent = `#ORD-${orderId}`;
   document.getElementById("confirmPayment").textContent = method;
   document.getElementById("confirmTotal").textContent = total;
   document.getElementById("trackerTime").textContent =
     new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-  // Optional: Linisin ang UI ng Cart sa background
   document.getElementById("cart-item").innerHTML = "";
   document.getElementById("emptyCart").style.display = "flex";
   document.getElementById("itemCountBadge").textContent = "0";
