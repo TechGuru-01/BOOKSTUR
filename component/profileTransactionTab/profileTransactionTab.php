@@ -31,9 +31,16 @@
                                 </td>
                                 <td><span style="color: #dc1717; font-weight: 700;">₱<?= number_format($order['total_amount'], 2) ?></span></td>
                                 <td>
-                                    <span class="status-badge status-<?= strtolower($order['status']) ?>">
-                                        <span class="material-icons-outlined" style="font-size: 14px;">
-                                            <?= ($order['status'] == 'Completed') ? 'check_circle' : 'pending' ?>
+                                    <?php 
+                                        $status = strtolower($order['status']);
+                                        $statusColor = ($status == 'claimed') ? '#27ae60' : (($status == 'pending') ? '#f1c40f' : '#888');
+                                        $statusBg = ($status == 'claimed') ? '#eafaf1' : (($status == 'pending') ? '#fef9e7' : '#f4f4f4');
+                                    ?>
+                                    <span class="status-badge status-<?= $status ?>" 
+                                        style="display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: capitalize; color: <?= $statusColor ?>; background-color: <?= $statusBg ?>;">
+                                        
+                                        <span class="material-icons-outlined" style="font-size: 16px;">
+                                            <?= ($status == 'claimed') ? 'check_circle' : 'hourglass_empty' ?>
                                         </span>
                                         <?= $order['status'] ?>
                                     </span>

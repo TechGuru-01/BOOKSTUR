@@ -73,18 +73,14 @@ if (isset($_POST['action']) && $_POST['action'] === 'clear_all') {
 
 if (isset($_POST['action']) && $_POST['action'] === 'place_order') {
     $user_id = $_SESSION['user_id'];
-    // JSON.parse logic sa JS, so json_decode dito sa PHP
     $cart_ids = json_decode($_POST['cart_ids']); 
     $payment_method = $_POST['payment_method'];
     $notes = $_POST['notes'];
-    
-    // Siguraduhin na integers ang IDs para iwas SQL injection
     $ids_for_sql = implode(',', array_map('intval', $cart_ids));
 
     $conn->begin_transaction();
 
     try {
-        // 1. Kuhanin ang detalye ng mga items na nasa listahan ng checked cart_ids
         $cart_query = "SELECT product_id, product_name, product_image, price, quantity 
                        FROM cart WHERE cart_id IN ($ids_for_sql) AND user_id = $user_id";
         $cart_result = $conn->query($cart_query);
@@ -96,22 +92,15 @@ if (isset($_POST['action']) && $_POST['action'] === 'place_order') {
         $total_amount = 0;
         $items_to_save = [];
 
-        // Loop muna sa cart results para makuha ang total at i-prepare ang items
         while ($item = $cart_result->fetch_assoc()) {
             $total_amount += ($item['price'] * $item['quantity']);
             $items_to_save[] = $item;
         }
 
-        // 2. INSERT sa `orders` table (Header)
         $stmt_order = $conn->prepare("INSERT INTO orders (user_id, total_amount, payment_method, order_notes, status) VALUES (?, ?, ?, ?, 'Pending')");
         $stmt_order->bind_param("idss", $user_id, $total_amount, $payment_method, $notes);
         $stmt_order->execute();
-        
-        // Ito yung order_id na gagamitin natin para sa order_items
         $new_order_id = $conn->insert_id;
-
-        // 3. INSERT sa `order_items` table (Details)
-        // Gagawa tayo ng isa pang prepare statement para sa loop
         $stmt_items = $conn->prepare("INSERT INTO order_items (order_id, product_id, product_name, product_image, price, quantity) VALUES (?, ?, ?, ?, ?, ?)");
         
         foreach ($items_to_save as $item) {
@@ -126,16 +115,11 @@ if (isset($_POST['action']) && $_POST['action'] === 'place_order') {
             $stmt_items->execute();
         }
 
-        // 4. DELETE sa `cart` table
-        // Buburahin lang ang mga items na kasama sa chinicheckout
         $conn->query("DELETE FROM cart WHERE cart_id IN ($ids_for_sql) AND user_id = $user_id");
-
-        // COMMIT: Kapag walang sablay, i-save lahat sa DB
         $conn->commit();
         echo json_encode(['status' => 'success', 'msg' => 'Order placed! Check your history.']);
 
     } catch (Exception $e) {
-        // ROLLBACK: Kapag may error, walang mabubura sa cart at walang masesave sa orders
         $conn->rollback();
         echo json_encode(['status' => 'error', 'msg' => $e->getMessage()]);
     }
@@ -156,6 +140,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'place_order') {
     <link rel="stylesheet" href="../../style.css">
     <link rel="stylesheet" href="Cart.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
 </head>
 <body>
@@ -183,6 +168,5 @@ if (isset($_POST['action']) && $_POST['action'] === 'place_order') {
     <script src="../../component/orderSummarySection/orderSummarySection.js"></script>
     <script src="../../component/adminUtils/adminUtils.js"></script>
     <script src="../../component/navbar/nav.js"></script>
-    <script src="Cart.js"></script>
 </body>
 </html>

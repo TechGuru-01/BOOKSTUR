@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
     changePasswordForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      // Confirmation lang ang ititira natin sa frontend
       Swal.fire({
         title: "Are you sure?",
         text: "Do you want to update your password?",
@@ -37,11 +36,10 @@ document.addEventListener("DOMContentLoaded", function () {
                   customClass: { container: "high-z-index" },
                 }).then(() => changePasswordForm.reset());
               } else {
-                // Ang errors dito ay galing na mismo sa PHP validation mo (min length, special chars, etc.)
                 Swal.fire({
                   icon: "error",
                   title: "Update Failed",
-                  text: data.msg, // Dito lalabas yung "Password should atleast be 8 characters long", etc.
+                  text: data.msg,
                   showConfirmButton: false,
                   timer: 2500,
                   timerProgressBar: true,

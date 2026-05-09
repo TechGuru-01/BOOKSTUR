@@ -66,10 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     $update_cart->execute();
                 } else {
                    $insert_cart = $conn->prepare("INSERT INTO cart (user_id, product_id, product_name, product_type, price, size, quantity, notes, product_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                    // 9 parameters: i (user), i (prod_id), s (name), s (type), d (price), s (size), i (qty), s (notes), s (image)
                     $insert_cart->bind_param("iissdsiss", $user_id, $product_id, $product_name, $product_type, $price, $selected_size, $quantity, $notes, $product_image);
                     $insert_cart->execute();
-                    // Tinanggal ang duplicate na execute dito
                 }
 
                 $conn->commit();

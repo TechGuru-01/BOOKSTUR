@@ -5,10 +5,7 @@
             Your Items
             <span class="item-count-badge" id="itemCountBadge">0</span>
         </span>
-        <button class="clear-cart-btn" onclick="clearCart()">
-            <span class="material-icons-outlined">delete_sweep</span>
-            Clear All
-        </button>
+
     </div>
 
     <div id="cart-item"></div>

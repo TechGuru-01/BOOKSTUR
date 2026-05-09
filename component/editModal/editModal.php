@@ -55,7 +55,6 @@ $productType = $_GET['producttype'] ?? '';
                         <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 5px; border-radius: 5px; margin-top: 5px;">
                             <table class="edit-stock-table" style="width: 100%;">
                                 <tbody id="stockTableBody">
-                                    <!-- Dito mag-i-inject ang JavaScript -->
                                 </tbody>
                             </table>
                         </div>

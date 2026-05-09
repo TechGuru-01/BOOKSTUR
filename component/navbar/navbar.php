@@ -2,6 +2,11 @@
 $current_page = $_SERVER['PHP_SELF'];
 $is_dashboard = (strpos($current_page, 'dashboard.php') !== false);
 $home_url = $is_dashboard ? 'javascript:window.scrollTo({top: 0, behavior: \'smooth\'});' : '/BOOKSTUR/pages/dashboard/dashboard.php';
+
+$raw_pos = $_SESSION['course'] ?? 'NOT_SET';
+echo '';
+$current_position = strtoupper(trim($raw_pos));
+$is_admin = ($current_position === 'ADMIN' || $current_position === 'SUPER ADMIN');
 ?>
 
 <script>
@@ -53,7 +58,6 @@ $home_url = $is_dashboard ? 'javascript:window.scrollTo({top: 0, behavior: \'smo
         </a>
     </div>
 
-    <!-- Mobile Menu Toggle -->
     <span class="material-icons-outlined mobile-menu-toggle" onclick="toggleMobileMenu()">menu</span>
 
     <ul class="nav-links">
@@ -68,7 +72,6 @@ $home_url = $is_dashboard ? 'javascript:window.scrollTo({top: 0, behavior: \'smo
             </a>
         </li>
 
-        <!-- Collapsible Shop Section -->
         <li class="has-submenu display-on-mobile">
             <div class="submenu-header" onclick="toggleSubmenu(this)">
                 <span>
@@ -84,12 +87,13 @@ $home_url = $is_dashboard ? 'javascript:window.scrollTo({top: 0, behavior: \'smo
                 <li><a href="../../pages/other/other.php" class="sub-btn">Supplies</a></li>
             </ul>
         </li>
-
+        <?php if(!$is_admin):?>
         <li>
             <a href="../../pages/cart/cart.php">
                 <span class="material-icons-outlined">shopping_bag</span> CART
             </a>
         </li>
+        <?php endif?>
         <li>
             <a href="../../pages/profile/profile.php">
                 <span class="material-icons-outlined">person</span> ACCOUNT

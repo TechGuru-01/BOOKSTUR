@@ -118,10 +118,6 @@ $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $orders_result = $stmt->get_result();
-$order_id = intval($_GET['order_id']);
-
-
-
 
 ?>
 <!DOCTYPE html>

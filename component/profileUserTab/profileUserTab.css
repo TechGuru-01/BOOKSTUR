@@ -1,31 +1,28 @@
-.status-badge.admin {
-    background: #fff3e0;
-    color: #ef6c00;
-    border: 1px solid rgba(239, 108, 0, 0.1);
-}
-
-.status-badge .material-icons-outlined {
-    font-size: 18px;
-}
-
 .table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
     overflow-x: auto;
+    border: 1px solid #eee;
+    border-radius: 8px;
 }
 
 .admin-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
 }
 
-.admin-table th {
+.admin-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #f8f9fa;
     text-align: left;
     padding: 15px;
-    background: #f8f9fa;
     color: #888;
     font-size: 0.8rem;
     text-transform: uppercase;
     font-weight: 800;
+    border-bottom: 2px solid #eee;
 }
 
 .admin-table td {
@@ -34,6 +31,16 @@
     font-weight: 600;
     font-size: 0.95rem;
     color: #444;
+}
+
+.status-badge.admin {
+    background: #fff3e0;
+    color: #ef6c00;
+    border: 1px solid rgba(239, 108, 0, 0.1);
+}
+
+.status-badge .material-icons-outlined {
+    font-size: 18px;
 }
 
 .action-btns {

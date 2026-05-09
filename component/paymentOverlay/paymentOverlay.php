@@ -39,9 +39,11 @@
 <div id="orderOverlay" class="order-overlay hidden">
     <div class="order-sheet">
         <div class="order-sheet-top">
-            <div class="success-ring">
+            <div class="success-ring" style="width: 80px; height: 80px; border: 4px solid #27ae60; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; background-color: #f0fff4;">
                 <div class="success-ring-inner">
-                    <span class="material-icons-outlined success-icon">check</span>
+                    <span class="material-icons-outlined success-icon" style="font-size: 48px; color: #27ae60; display: block;">
+                        check
+                    </span>
                 </div>
             </div>
             <h2 class="order-success-title">Order Placed!</h2>

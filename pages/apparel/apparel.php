@@ -11,13 +11,13 @@ $tableName = 'apparel';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../component/navbar/navbar.css">
-    <link rel="stylesheet" href="../../component/searchbar/searchbar.css">
     <link rel="stylesheet" href="../../component/libraryHeader/libraryHeader.css">
     <link rel="stylesheet" href="../../component/homeFilter/homeFilter.css">
     <link rel="stylesheet" href="../../component/adminUtils/adminUtils.css">
     <link rel="stylesheet" href="../../component/addItems/addItems.css">
     <link rel="stylesheet" href="../../component/editModal/editModal.css">
     <link rel="stylesheet" href="../../component/libraryContent/libraryContent.css">
+    <link rel="stylesheet" href="../../component/addToCartModal/addToCartModal.css">
     <link rel="stylesheet" href="../../component/footerCap/footerCap.css">
     <link rel="stylesheet" href="../../component/footer/footer.css">
     <link rel="stylesheet" href="../../style.css">
@@ -36,11 +36,13 @@ $tableName = 'apparel';
     <?php include '../../component/adminUtils/adminUtils.php' ?>
     <?php include '../../component/addItems/addItems.php' ?>
      <?php include '../../component/editModal/editModal.php' ?>
+     <?php include '../../component/addToCartModal/addToCartModal.php' ?>
     <?php include '../../component/footerCap/footerCap.php'?>
     <?php include '../../component/footer/footer.php' ?>
 
     <script src="../../icons/sweetalert2.all.min.js"></script>
      <script src="../../component/editModal/editModal.js"></script>
+       <script src="../../component/addToCartModal/addToCartModal.js"></script>
      <script src="../../component/editModal/editModalResponseHandler.js"></script>
     <script src="../../component/addItems/addItems.js"></script>
     <script src="../../component/adminUtils/adminUtils.js"></script>

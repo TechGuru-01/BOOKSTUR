@@ -13,11 +13,13 @@ $isAdmin = ($current_position === 'ADMIN' || $current_position === 'SUPER ADMIN'
             <span class="material-symbols-outlined">auto_stories</span>
             Add Items
         </button>
-        
-        <button class="ubuntu-item" onclick="confirmLogout()">
-            <span class="material-symbols-rounded">logout</span>
-            Logout
+        <a href="../../component/adminUtils/transaction.php">
+         <button class="ubuntu-item">
+            <span class="material-symbols-outlined">history</span>
+             History
         </button>
+        </a>
+        
     </div>
 
     <button class="ubuntu-launcher" id="launcherBtn">
