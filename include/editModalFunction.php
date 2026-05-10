@@ -19,6 +19,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $stock_2xl = intval($_POST['stocks']['2XL'] ?? 0);
     $stock_3xl = intval($_POST['stocks']['3XL'] ?? 0);
     $stock_4xl = intval($_POST['stocks']['4XL'] ?? 0);
+    $stock_quantity = intval($_POST['stock_quantity'] ?? 0);
 
     $total_stock = $stock_xs + $stock_s + $stock_m + $stock_l + $stock_xl + $stock_2xl + $stock_3xl + $stock_4xl;
     $status_db = ($total_stock > 0) ? 'Available' : 'Out of Stock';
@@ -49,7 +50,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     try {
         if ($targetTable == 'books' || $targetTable == 'academic_tools'){
             $query = $conn->prepare("UPDATE $targetTable SET category_id=?, product_name=?, description=?, status=?, price=?, stock_quantity=?, product_image=? WHERE product_id=?");
-            $query->bind_param("isssdssi", $category_id, $product_name, $description, $status_db, $price, $stock_s, $image_file_name, $product_id);
+            $query->bind_param(
+                "isssdisi",
+                $category_id,
+                $product_name,
+                $description,
+                $status_db,
+                $price,
+                $stock_quantity, 
+                $image_file_name,
+                $product_id
+            );
         } else {
             $query = $conn->prepare("UPDATE $targetTable SET 
                 category_id = ?, 

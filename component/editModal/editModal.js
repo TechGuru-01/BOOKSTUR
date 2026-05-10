@@ -33,13 +33,13 @@ function openEditModal(product) {
     stockTableBody.innerHTML = `
             <tr>
                 <td><strong>Quantity</strong></td>
-                <td><input type="number" name="stocks[S]" id="stock_s" class="edit-input-field" min="0" value="${product.stock_quantity || 0}"></td>
+                <td><input type="number" name="stock_quantity" id="stock_quantity" class="edit-input-field" min="0" value="${product.stock_quantity || 0}"></td>
             </tr>
         `;
   } else {
     stockTableBody.innerHTML = `
             <tr><td>Extra Small</td><td><input type="number" name="stocks[XS]" id="stock_XS" class="edit-input-field" value="${product.stock_xs || 0}"></td></tr>
-            <tr><td>Small</td><td><input type="number" name="stocks[S]" id="stock_S" class="edit-input-field" value="${product.stock_quantity || 0}"></td></tr>
+            <tr><td>Small</td><td><input type="number" name="stocks[S]" id="stock_S" class="edit-input-field" value="${product.stock_s || 0}"></td></tr>
             <tr><td>Medium</td><td><input type="number" name="stocks[M]" id="stock_M" class="edit-input-field" value="${product.stock_m || 0}"></td></tr>
             <tr><td>Large</td><td><input type="number" name="stocks[L]" id="stock_L" class="edit-input-field" value="${product.stock_l || 0}"></td></tr>
             <tr><td>XL</td><td><input type="number" name="stocks[XL]" id="stock_XL" class="edit-input-field" value="${product.stock_xl || 0}"></td></tr>

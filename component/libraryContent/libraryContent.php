@@ -41,8 +41,8 @@ if (!$result) {
                 $currentStatus = "Unavailable";
                 $status_class = "status-out";
             } else {
-                $currentStatus = $row['status'] ?? "Available";
-                $status_class = ($currentStatus === 'Available') ? 'status-available' : 'status-out';
+                $currentStatus = "Available"; 
+                 $status_class = 'status-available';
             }
 
             $image_path = "../../src/uploads/products/" . $row['product_image'];
