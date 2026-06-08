@@ -13,7 +13,7 @@ A specialized, full-stack e-commerce dashboard and inventory administration plat
 
 ## Tech Stack
 * Backend: PHP, MySQL (Local XAMPP Environment)
-* Frontend: JavaScript, HTML5, CSS3 (Premium High-Contrast Layouts)
+* Frontend: JavaScript, HTML5, CSS3
 * Architecture: Agile modular design, MVC/Separation of Concerns principles
 
 ## System & Transaction Workflow
