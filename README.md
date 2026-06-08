@@ -4,7 +4,7 @@ A specialized, full-stack e-commerce dashboard and inventory administration plat
 
 ## Key Features
 * Tailored E-Commerce Catalog: Purpose-built workflows optimized specifically for tracking academic books, school uniforms, and department-specific supplies.
-* Premium High-Contrast UI: Built a modern, dark/high-contrast dashboard layout designed for seamless administration, product filtering, and quick navigation.
+* Premium High-Contrast UI: Built a modern dashboard layout designed for seamless administration, product filtering, and quick navigation.
 * Modular Full-Stack Architecture: Developed using structured PHP and MySQL CRUD logic to ensure a strict separation of concerns, avoiding bloat while maintaining database integrity.
 * Inventory Control: Features a single source of truth for stock quantities, automated calculations, and localized database management.
 
