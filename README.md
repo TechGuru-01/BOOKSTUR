@@ -84,4 +84,4 @@ Maximizing performance on edge hardware required three key architectural steps:
 ## References & Source Publication
 
 * **Research Paper:** *Lumina Alert: A YOLOv11n-Based Embedded System for Real-Time Driver Drowsiness Detection and Multi-Modal Intervention*
-* **Full Publication PDF:** [ResearchGate Document Link](https://www.google.com/search?q=https%3A%2F%2Fwww.researchgate.net%2Fprofile%2FGrazielle-Nychole-Dela-Cruz%2Fpublication%2F401350914_Lumina_Alert_A_YOLOv11n-Based_Embedded_System_for_Real-Time_Driver_Drowsiness_Detection_and_Multi-Modal_Intervention%2Flinks%2F69afdb1ba91b826e4348be2c%2FLumina-Alert-A-YOLOv11n-Based-Embedded-System-for-Real-Time-Driver-Drowsiness-Detection-and-Multi-Modal-Intervention.pdf)
+* **Full Publication PDF:** https://www.researchgate.net/profile/Grazielle-Nychole-Dela-Cruz/publication/401350914_Lumina_Alert_A_YOLOv11n-Based_Embedded_System_for_Real-Time_Driver_Drowsiness_Detection_and_Multi-Modal_Intervention/links/69afdb1ba91b826e4348be2c/Lumina-Alert-A-YOLOv11n-Based-Embedded-System-for-Real-Time-Driver-Drowsiness-Detection-and-Multi-Modal-Intervention.pdf
