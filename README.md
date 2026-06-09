@@ -1,30 +1,77 @@
-# Institutional Bookstore Web Application
+# Lumina Alert: A YOLOv11n-Based Embedded System for Real-Time Driver Drowsiness Detection and Multi-Modal Intervention
 
-A specialized, full-stack e-commerce dashboard and inventory administration platform custom-built for San Sebastian College - Recoletos de Cavite. This system streamlines the catalog management, tracking, and local distribution of academic literature, school uniforms, and institutional supplies.
+[![Award](https://img.shields.io/badge/Award-Best%20Innovative%20Design%202026-gold)](https://img.shields.io/badge/Award-Best%20Innovative%20Design%202026-gold)
+[![Platform](https://img.shields.io/badge/Platform-NVIDIA%20Jetson%20Orin%20Nano-green)](#)
+[![Hardware](https://img.shields.io/badge/Hardware-ESP8266%20%7C%20NodeMCU-blue)](#)
 
-## Key Features
-* Tailored E-Commerce Catalog: Purpose-built workflows optimized specifically for tracking academic books, school uniforms, and department-specific supplies.
-* Interactive Shopping Workflows: Features complete user-side functionality including dynamic item selection, an interactive "add to cart" system, and a simulated checkout process to mimic production e-commerce operations.
-* Premium High-Contrast UI: Built a modern dashboard layout designed for seamless administration, product filtering, and quick navigation.
-* Real-Time User Activity Tracking: Provides administrators with live visibility into platform usage, allowing them to monitor exactly which users and students are currently active on the system.
-* Administrative User Management: Empowers system administrators to handle student account requests, including an override feature to reset forgotten student passwords securely.
-* Modular Full-Stack Architecture: Developed using structured PHP and MySQL CRUD logic to ensure a strict separation of concerns, avoiding bloat while maintaining database integrity.
-* Inventory Control: Features a single source of truth for stock quantities, automated calculations, and localized database management.
+An end-to-end, real-time safety application engineered to prevent vehicular accidents by actively monitoring driver fatigue states and deploying immediate multi-modal physical alerts. This project was honored with the **"Best Innovative Design 2026"** award.
 
-## Tech Stack
-* Backend: PHP, MySQL (Local XAMPP Environment)
-* Frontend: JavaScript, HTML5, CSS3
-* Architecture: Agile modular design, MVC/Separation of Concerns principles
+---
 
-## System & Transaction Workflow
-1. Browse & Selection: Students browse the localized catalog for academic books, school uniforms, or supplies and add their selections to the dynamic shopping cart.
-2. Checkout Simulation: The user proceeds through a simulated payment and checkout pipeline that validates transactions without real financial processing.
-3. Inventory Update: Upon checkout completion, the backend triggers MySQL CRUD operations to adjust the available stock quantities across database tables.
-4. Session Monitoring & Support: Administrators track active user sessions via the main dashboard for security and transparency. If an active or returning student loses access to their account, administrators can override database credentials via the secure admin panel to reset the forgotten password.
+## 📋 Table of Contents
+1. [System Architecture & Signal Workflow](#-system-architecture--signal-workflow)
+2. [Model Training & Performance Optimization](#-model-training--performance-optimization)
+3. [Local Installation & Hardware Deployment](#-local-installation--hardware-deployment)
+4. [References & Source Publication](#-references--source-publication)
 
-## Local Installation & Setup
-1. Clone the repository into your local machine.
-2. If using XAMPP, move the project directory into the htdocs/ folder.
-3. Import the provided .sql file into your local phpMyAdmin database.
-4. Configure your database connection string in the core configuration file.
-5. Boot up Apache and MySQL on your XAMPP Control Panel and access the platform via localhost.
+---
+
+## ⚙️ System Architecture & Signal Workflow
+
+The system operates via an automated, distributed network topology that bridges local high-speed computer vision with deterministic embedded hardware response loops. The complete computational and mechanical process is executed through the following distinct operating phases:
+
+### 1. Pre-Drive Security Check and Lockout State Machine
+Before the vehicle's ignition relay can be closed, the system initiates an obligatory safety verification state:
+* **The Monitoring Baseline:** The driver faces the vehicle's A-pillar mounted camera while the software evaluates baseline drowsiness indicators directly from face detection bounding boxes. 
+* **The Punishment Mechanism:** If the initialization routine registers an immediate fatigue state (prolonged eye closure or frequent yawning signatures), the application flags a verification failure. The script registers the failure count to a local cache file and initiates a hard software lockout, forcing the operator to wait before trying again:
+  * **Failure 1:** Activates an unbypassable 5-minute cooldown timer.
+  * **Failure 2:** Escalates to an unbypassable 10-minute cooldown timer.
+  * **Failure 3:** Imposes a maximum 15-minute cooldown timer.
+* **Persistent Session Token:** To maximize efficiency and ensure user convenience, passing the check generates a secure session token that remains valid in the background for a 2-hour window. This ensures that brief stops, such as fueling or loading luggage, do not require the driver to repeat the validation test upon turning the vehicle back on.
+
+### 2. High-Frequency Video Capture and Streaming Pipeline
+Once the driver is authorized and the vehicle is in operation, the dynamic tracking loop initializes:
+* **Ergonomic Camera Placement:** A standard USB webcam is physically positioned on the driver-side **A-pillar** of the Toyota Avanza. This specific mounting location ensures the optical sensor captures an optimal angular profile of the driver's face while remaining completely non-intrusive, preserving an unobstructed field of view during operation.
+* **Native Ultralytics Stream Processing:** The video frame ingestion, buffering, and frame management are handled directly through native **Ultralytics execution pipelines** running within an isolated Docker container. This maps the physical video device straight to the ML frame-handler, keeping data pathways streamlined and minimizing conversion overhead.
+
+### 3. TensorRT Edge Inference and Single-Target Tracking
+The computational core on the Nvidia Jetson Orin Nano processes incoming video streams utilizing advanced machine learning acceleration graphs and strict object tracking constraints:
+* Raw image matrices are forwarded directly into the YOLOv11n engine model, which has been compiled down to a specialized TensorRT format to squeeze maximum efficiency out of the Jetson's CUDA cores.
+* Because the system utilizes a pure YOLO object detection architecture rather than landmark estimation, it detects and isolates targeted facial feature classes (such as the face, open/closed eyes, and mouth state) using high-precision bounding boxes.
+* To guarantee system stability and eliminate noise from passenger movement, the application integrates the **ByteTrack** tracking algorithm via the Ultralytics API. The tracking configuration is explicitly restricted to a maximum of **one target**, locking the tracking frame strictly onto the primary driver.
+* **Continuous Drive Mode Monitoring:** Once the pre-drive evaluation is cleared, the driver is permitted to navigate continuously. The system transitions into an active driving assessment loop, using mathematical evaluations of bounding boxes over time to constantly parse fatigue levels.
+
+### 4. Escalated Severity Alert Logic
+When drowsiness profiles are captured mid-transit, the system executes a real-time tiered escalation routine based on anomaly duration and severity:
+* **Early Fatigue Warning:** Upon detecting initial micro-sleep indicators or early-stage yawning trends, the system triggers localized audio warnings, utilizing the core application interface to prompt the driver to adjust focus.
+* **Severe Fatigue Intervention:** If the vision pipeline flags severe, sustained drowsiness anomalies (e.g., critical extended eye closure times), the automation logic immediately escalates the response. The platform plays high-priority voice prompts specifically alerting passengers within the vehicle cabin to step in and take immediate action. Simultaneously, an unrelenting **3000 Hz high-frequency distress alarm** is activated, piercing through the vehicle to interrupt the micro-sleep state. This multi-channel alert loop runs continuously and will remain engaged until the driver demonstrates full visual alertness and normal tracking metrics.
+
+### 5. Low-Latency Microcontroller Signal Offloading
+To protect core operating threads and ensure immediate reaction times, heavy edge inference processing is completely decoupled from the physical alert hardware execution:
+* When a persistent drowsiness state is confirmed by the TensorRT engine, the main Python application thread constructs a lightweight, single-byte serial interrupt trigger packet.
+* This execution code is instantly transmitted down an automated hardware abstraction layer via the PySerial communication module, communicating over a hardwired USB-to-TTL UART serial bridge connected directly to the ESP8266 (NodeMCU) microcontroller.
+
+### 6. Multi-Channel Safety Countermeasure Actuation
+The ESP8266 acts as a dedicated real-time hardware handler, listening continuously for incoming interrupt commands from the Jetson:
+* **Acoustic Warning Intervention:** The moment the ESP8266 decodes the serial alarm byte, it routes a high-priority sound signal straight into the auxiliary/USB audio interface of the Toyota Avanza. This forces high-decibel, high-frequency alert tracks—and the severe 3000 Hz critical buzzer alarm—to blare directly over the car speakers, cutting through driver disorientation.
+* **Mechanical Countermeasures:** Simultaneously, the microcontroller shifts its onboard GPIO pins from low to high states. This voltage spike triggers mechanical relay boards linked to physical cabin alerts, completing a secure, closed-loop safety intervention that keeps operating conditions safe.
+
+---
+
+## 📊 Model Training & Performance Optimization
+
+The core intelligence relies on an optimized YOLOv11n network profile trained extensively on dense facial datasets under erratic in-cabin conditions, balancing heavy backlight variation, nighttime driving angles, and optical obstructions like glasses. The custom-trained model achieved a high-accuracy baseline performance with a **93% evaluation score** during validation testing.
+
+Maximizing performance on edge hardware required three key architectural steps:
+* **Weight Quantization & Calibration:** Translating standard `.pt` PyTorch weights directly into localized TensorRT execution plans to exploit the hardware's deep learning accelerators. During compilation, the TensorRT engine was rigorously calibrated using a dedicated subset of **1,000 calibration images** to optimize quantization precision, lower latency, and preserve edge accuracy.
+* **Memory Management:** Allocating a 50 GB local swap partition on the Jetson Orin Nano to seamlessly process sudden processing bursts without kernel panic or out-of-memory overhead.
+* **Containerization:** Enclosing the entire runtime, CUDA toolkit variants, and dependency packages within an isolated Docker environment to ensure constant execution parameters on any host setup.
+
+---
+
+## 🚀 Local Installation & Hardware Deployment
+
+1. Clone this repository onto your Nvidia Jetson Orin Nano:
+```bash
+   git clone [https://github.com/your-username/lumina-alert.git](https://github.com/your-username/lumina-alert.git)
+   cd lumina-alert
