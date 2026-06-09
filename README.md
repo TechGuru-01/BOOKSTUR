@@ -12,9 +12,9 @@ Before the vehicle's ignition relay can be closed, the system initiates an oblig
 
 * **The Monitoring Baseline:** The driver faces the vehicle's A-pillar mounted camera while the software evaluates baseline drowsiness indicators directly from face detection bounding boxes.
 * **The Punsihment Mechanism:** If the initialization routine registers an immediate fatigue state (prolonged eye closure or frequent yawning signatures), the application flags a verification failure. The script registers the failure count to a local cache file and initiates a hard software lockout, forcing the operator to wait before trying again:
-* *** Failure 1:** Activates an unbypassable 5-minute cooldown timer.
-* *** Failure 2:** Escalates to an unbypassable 10-minute cooldown timer.
-* *** Failure 3:** Imposes a maximum 15-minute cooldown timer.
+** **Failure 1:** Activates an unbypassable 5-minute cooldown timer.
+** **Failure 2:** Escalates to an unbypassable 10-minute cooldown timer.
+** **Failure 3:** Imposes a maximum 15-minute cooldown timer.
 
 
 * **Persistent Session Token:** To maximize efficiency and ensure user convenience, passing the check generates a secure session token that remains valid in the background for a 2-hour window. This ensures that brief stops, such as fueling or loading luggage, do not require the driver to repeat the validation test upon turning the vehicle back on.
